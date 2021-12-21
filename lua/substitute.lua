@@ -20,6 +20,13 @@ end
 local function do_substitution(start_row, start_col, end_row, end_col, register)
   local replacement = vim.fn.getreg(register)
 
+  if config.options.yank_substitued_text then
+    vim.fn.setreg(
+      utils.get_default_register(),
+      table.concat(utils.nvim_buf_get_text(start_row, start_col, end_row, end_col), "\n")
+    )
+  end
+
   vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, vim.split(replacement:gsub("\n$", ""), "\n"))
 
   if config.options.on_substitute ~= nil then

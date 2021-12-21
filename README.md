@@ -57,6 +57,12 @@ Default : `nil`
 
 Function that will be called each times a substitution is made. This function takes a `param` argument that contains the `register` used for substitution.
 
+#### `yank_substitued_text`
+
+Default : `false`
+
+If `true`, when performing a substitution, substitued text is pushed into the default register.
+
 ### Integration
 
 <details>

@@ -18,4 +18,26 @@ function utils.get_region(vmode)
   }
 end
 
+function utils.nvim_buf_get_text(start_row, start_col, end_row, end_col)
+  local lines = vim.api.nvim_buf_get_lines(0, start_row, end_row + 1, true)
+
+  lines[vim.tbl_count(lines)] = string.sub(lines[vim.tbl_count(lines)], 0, end_col)
+  lines[1] = string.sub(lines[1], start_col + 1)
+
+  return lines
+end
+
+function utils.get_default_register()
+  local clipboardFlags = vim.split(vim.api.nvim_get_option("clipboard"), ",")
+
+  if vim.tbl_contains(clipboardFlags, "unnamedplus") then
+    return "+"
+  end
+
+  if vim.tbl_contains(clipboardFlags, "unnamed") then
+    return "*"
+  end
+
+  return '"'
+end
 return utils

@@ -19,4 +19,19 @@ describe("Test get region", function()
     assert(region.end_col == 2)
     assert(region.end_row == 2)
   end)
+
+  it("should get text", function()
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_command("buffer " .. buf)
+    vim.api.nvim_buf_set_lines(0, 0, -1, true, {
+      "Lorem",
+      "Ipsum",
+    })
+
+    local text = utils.nvim_buf_get_text(1, 2, 2, 3)
+    assert.are.same({ "orem", "Ipsu" }, text)
+
+    text = utils.nvim_buf_get_text(1, 2, 1, 3)
+    assert.are.same({ "ore" }, text)
+  end)
 end)
