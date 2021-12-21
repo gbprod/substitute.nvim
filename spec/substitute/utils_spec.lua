@@ -28,10 +28,10 @@ describe("Test get region", function()
       "Ipsum",
     })
 
-    local text = utils.nvim_buf_get_text(1, 2, 2, 3)
+    local text = utils.nvim_buf_get_text(0, 1, 1, 4)
     assert.are.same({ "orem", "Ipsu" }, text)
 
-    text = utils.nvim_buf_get_text(1, 2, 1, 3)
+    text = utils.nvim_buf_get_text(0, 1, 0, 4)
     assert.are.same({ "ore" }, text)
   end)
 end)
