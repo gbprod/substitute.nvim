@@ -75,8 +75,8 @@ require("substitute").setup({
 [vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
+vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').visual()<cr>", {})
+vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').visual()<cr>", {})
 ```
 
 or
@@ -94,14 +94,14 @@ Another operator provided allows specifying both the text to replace and the lin
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>")
+vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>")
 ```
 
 or
 
 ```viml
 nmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
-xmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
+xmap <leader>s <cmd>lua require('substitute.range').visual()<cr>
 ```
 
 After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a substitute command that allow to replace the text given by `motion1` by the text will enter in the command line for each line provided by `motion2`.
@@ -149,21 +149,7 @@ require("substitute").setup({
 })
 ```
 
-[vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
-
-```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
-```
-
-or
-
-```viml
-xmap p <cmd>lua require('substitute').operator()<cr>
-xmap P <cmd>lua require('substitute').operator()<cr>
-```
-
-</details> example, you could execute `<leader>siwip` to replace all instances of the current word under the cursor that exist within the paragraph under the cursor.
+</details>
 
 ### Configuration
 
@@ -172,37 +158,6 @@ xmap P <cmd>lua require('substitute').operator()<cr>
 Default : `s`
 
 Function that will be called each times a substitution is made. This function takes a `param` argument that contains the `register` used for substitution.
-
-### Integration
-
-<details>
-<summary><b>svermeulen/vim-yoink</b></summary>
-
-To enable [vim-yoink](https://github.com/svermeulen/vim-yoink) swap when performing a substitution, you can add this to your setup:
-
-```lua
-require("substitute").setup({
-  on_substitute = function(_)
-    vim.cmd("call yoink#startUndoRepeatSwap()")
-  end,
-})
-```
-
-[vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
-
-```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
-```
-
-or
-
-```viml
-xmap p <cmd>lua require('substitute').operator()<cr>
-xmap P <cmd>lua require('substitute').operator()<cr>
-```
-
-</details>
 
 ## Credits
 

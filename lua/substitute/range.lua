@@ -15,6 +15,12 @@ function range.operator(options)
   vim.api.nvim_feedkeys("g@", "i", false)
 end
 
+function range.visual(options)
+  range.state.overrides = options or {}
+  vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
+  vim.api.nvim_feedkeys("g@`>", "i", false)
+end
+
 local function create_match()
   range.state.match = vim.fn.matchadd("Search", vim.fn.escape(range.state.subject, "\\"), 2)
 
@@ -52,18 +58,8 @@ function range.operator_callback(vmode)
 
   create_match()
 
-  local keys = vim.api.nvim_replace_termcodes(
-    "<cmd>lua require('substitute.range').selection_operator()<cr>",
-    true,
-    false,
-    true
-  )
-  vim.api.nvim_feedkeys(keys, "i", true)
-end
-
-function range.selection_operator()
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
-  vim.api.nvim_feedkeys("g@", "i", false)
+  vim.api.nvim_feedkeys("g@", "t", false)
 end
 
 local function create_replace_command()
