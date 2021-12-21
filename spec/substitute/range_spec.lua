@@ -11,12 +11,9 @@ describe("Substitute range", function()
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_command("buffer " .. buf)
 
-    vim.api.nvim_set_keymap(
-      "n",
-      "<leader>s",
-      "<cmd>lua require('substitute.range').operator()<cr>g@",
-      { noremap = true }
-    )
+    vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", {
+      noremap = true,
+    })
 
     vim.api.nvim_buf_set_lines(0, 0, -1, true, {
       "Lorem",

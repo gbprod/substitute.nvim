@@ -14,6 +14,7 @@ end
 function substitute.operator()
   substitute.state.register = vim.v.register
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
+  vim.api.nvim_feedkeys("g@", "i", false)
 end
 
 local function do_substitution(start_row, start_col, end_row, end_col, register)
@@ -40,34 +41,27 @@ function substitute.operator_callback(vmode)
 end
 
 function substitute.line()
-  local count = vim.v.count == 0 and 1 or vim.v.count
-
-  local start_line = vim.fn.line(".")
-  local end_line = math.min(start_line + count - 1, vim.fn.line("$"))
-
-  do_substitution(start_line - 1, 0, end_line - 1, vim.fn.getline(end_line):len(), vim.v.register)
-
-  if vim.g.loaded_repeat then
-    vim.api.nvim_call_function(
-      "repeat#set",
-      { vim.api.nvim_replace_termcodes("<cmd>lua require('substitute').line()<cr>", true, false, true) }
-    )
-  end
+  substitute.state.register = vim.v.register
+  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
+  local keys = vim.api.nvim_replace_termcodes(
+    string.format("g@:normal! 0v%s$<cr>", vim.v.count > 0 and vim.v.count - 1 .. "j" or ""),
+    true,
+    false,
+    true
+  )
+  vim.api.nvim_feedkeys(keys, "i", false)
 end
 
 function substitute.eol()
-  local position = vim.fn.getcurpos()
-  local line = position[2]
-  local col = position[3]
+  substitute.state.register = vim.v.register
+  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
+  vim.api.nvim_feedkeys("g@$", "i", false)
+end
 
-  do_substitution(line - 1, col - 1, line - 1, vim.fn.getline("."):len(), vim.v.register)
-
-  if vim.g.loaded_repeat then
-    vim.api.nvim_call_function(
-      "repeat#set",
-      { vim.api.nvim_replace_termcodes("<cmd>lua require('substitute').eol()<cr>", true, false, true) }
-    )
-  end
+function substitute.visual()
+  substitute.state.register = vim.v.register
+  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
+  vim.api.nvim_feedkeys("g@`>", "i", false)
 end
 
 return substitute

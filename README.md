@@ -28,24 +28,24 @@ use({
 It contains no default mappings and will have no effect until you add your own maps to it.
 
 ```lua
-vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>g@", { noremap = true })
+vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').operator()<cr>g@`>", { noremap = true })
+vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 ```
 
 Or
 
 ```viml
-nnoremap s <cmd>lua require('substitute').operator()<cr>g@
+nnoremap s <cmd>lua require('substitute').operator()<cr>
 nnoremap ss <cmd>lua require('substitute').line()<cr>
 nnoremap S <cmd>lua require('substitute').eol()<cr>
-xnoremap s <cmd>lua require('substitute').operator()<cr>g@`>
+xnoremap s <cmd>lua require('substitute').visual()<cr>
 ```
 
 Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of the default register (or an explicit register if provided). For example, you could execute siw to replace the current word under the cursor with the current yank, or sip to replace the paragraph, etc.
 
-This action is repeatable if you have [tpope/vim-repeat](https://github.com/tpope/vim-repeat) plugin installed.
+This action is dot-repeatable.
 
 Note: in this case you will be shadowing the change character key `s` so you will have to use the longer form `cl`.
 
@@ -75,15 +75,15 @@ require("substitute").setup({
 [vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
+vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
+vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
 ```
 
 or
 
 ```viml
-xmap p <cmd>lua require('substitute').operator()<cr>g@`>
-xmap P <cmd>lua require('substitute').operator()<cr>g@`>
+xmap p <cmd>lua require('substitute').operator()<cr>
+xmap P <cmd>lua require('substitute').operator()<cr>
 ```
 
 </details>
@@ -93,15 +93,15 @@ xmap P <cmd>lua require('substitute').operator()<cr>g@`>
 Another operator provided allows specifying both the text to replace and the line range over which to apply the change by using multiple consecutive motions.
 
 ```lua
-vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>g@", { noremap = true })
-vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>g@`>")
+vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>")
 ```
 
 or
 
 ```viml
-nmap <leader>s <cmd>lua require('substitute.range').operator()<cr>g@
-xmap <leader>s <cmd>lua require('substitute.range').operator()<cr>g@`>
+nmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
+xmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
 ```
 
 After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a substitute command that allow to replace the text given by `motion1` by the text will enter in the command line for each line provided by `motion2`.
@@ -111,7 +111,7 @@ Alternatively, we can also select `motion1` in visual mode and then hit `<leader
 You can override any default configuration (described later) by passing this to the operator function. By example, this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
 ```viml
-nmap <leader>S <cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>g@
+nmap <leader>S <cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>
 ```
 
 ### Configuration
@@ -152,20 +152,18 @@ require("substitute").setup({
 [vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
+vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
+vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
 ```
 
 or
 
 ```viml
-xmap p <cmd>lua require('substitute').operator()<cr>g@`>
-xmap P <cmd>lua require('substitute').operator()<cr>g@`>
+xmap p <cmd>lua require('substitute').operator()<cr>
+xmap P <cmd>lua require('substitute').operator()<cr>
 ```
 
 </details> example, you could execute `<leader>siwip` to replace all instances of the current word under the cursor that exist within the paragraph under the cursor.
-
-This action is repeatable if you have [tpope/vim-repeat](https://github.com/tpope/vim-repeat) plugin installed.
 
 ### Configuration
 
@@ -193,15 +191,15 @@ require("substitute").setup({
 [vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>g@`>", {})
+vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').operator()<cr>", {})
+vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').operator()<cr>", {})
 ```
 
 or
 
 ```viml
-xmap p <cmd>lua require('substitute').operator()<cr>g@`>
-xmap P <cmd>lua require('substitute').operator()<cr>g@`>
+xmap p <cmd>lua require('substitute').operator()<cr>
+xmap P <cmd>lua require('substitute').operator()<cr>
 ```
 
 </details>

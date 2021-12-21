@@ -19,7 +19,7 @@ describe("Substitute", function()
 
     vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
     vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-    vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>g@", { noremap = true })
+    vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
 
     vim.api.nvim_buf_set_lines(0, 0, -1, true, {
       "Lorem",
@@ -115,7 +115,8 @@ describe("On substitute option", function()
       end,
     })
 
-    substitute.line()
+    execute_keys("yw")
+    execute_keys("sw")
 
     assert(called)
   end)

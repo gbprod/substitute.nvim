@@ -12,6 +12,7 @@ range.state = {
 function range.operator(options)
   range.state.overrides = options or {}
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
+  vim.api.nvim_feedkeys("g@", "i", false)
 end
 
 local function create_match()
@@ -52,7 +53,7 @@ function range.operator_callback(vmode)
   create_match()
 
   local keys = vim.api.nvim_replace_termcodes(
-    "<cmd>lua require('substitute.range').selection_operator()<cr>g@",
+    "<cmd>lua require('substitute.range').selection_operator()<cr>",
     true,
     false,
     true
@@ -62,6 +63,7 @@ end
 
 function range.selection_operator()
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
+  vim.api.nvim_feedkeys("g@", "i", false)
 end
 
 local function create_replace_command()
