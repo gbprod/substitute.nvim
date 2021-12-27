@@ -5,18 +5,23 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 7 * * 1'
 
 jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nvim-versions: ['stable', 'nightly']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
-          version: nightly
+          version: ${{ matrix.nvim-versions }}
       - name: Setup ‘lua’
         uses: leafo/gh-actions-lua@v8
         with:
