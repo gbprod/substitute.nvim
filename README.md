@@ -101,6 +101,7 @@ Another operator provided allows specifying both the text to replace and the lin
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>")
+vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>")
 ```
 
 or
@@ -108,11 +109,14 @@ or
 ```viml
 nmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
 xmap <leader>s <cmd>lua require('substitute.range').visual()<cr>
+nmap <leader>ss <cmd>lua require('substitute.range').word()<cr>
 ```
 
 After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a substitute command that allow to replace the text given by `motion1` by the text will enter in the command line for each line provided by `motion2`.
 
 Alternatively, we can also select `motion1` in visual mode and then hit `<leader>s<motion2>` for the same effect.
+
+For convenience, `<leader>ss<motion2>` can be used to select word under the cursor as motion1.
 
 You can override any default configuration (described later) by passing this to the operator function. By example, this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 

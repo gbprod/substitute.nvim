@@ -21,6 +21,12 @@ function range.visual(options)
   vim.api.nvim_feedkeys("g@`>", "i", false)
 end
 
+function range.word(options)
+  range.state.overrides = options or {}
+  vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
+  vim.api.nvim_feedkeys("g@iw", "i", false)
+end
+
 local function create_match()
   range.state.match = vim.fn.matchadd("Search", vim.fn.escape(range.state.subject, "\\"), 2)
 
