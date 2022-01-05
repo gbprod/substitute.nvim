@@ -37,6 +37,8 @@ local function do_substitution(start_row, start_col, end_row, end_col, register)
 end
 
 function substitute.operator_callback(vmode)
+  vim.o.operatorfunc = ""
+
   local region = utils.get_region(vmode)
   do_substitution(
     region.start_row - 1,
