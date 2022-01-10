@@ -72,7 +72,6 @@ local function create_replace_command()
   local c = config.get_range(range.state.overrides)
   local escaped_subject = vim.fn.escape(range.state.subject, "\\")
 
-  print(vim.inspect(c))
   return string.format(
     ":'[,']%s/%s/%s/g%s<Left><Left>%s",
     c.prefix,
