@@ -22,7 +22,7 @@ function range.visual(options)
 end
 
 function range.word(options)
-  range.state.overrides = options or {}
+  range.state.overrides = options or { complete_word = true }
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
   vim.api.nvim_feedkeys("g@iw", "i", false)
 end
@@ -71,11 +71,12 @@ end
 local function create_replace_command()
   local c = config.get_range(range.state.overrides)
   local escaped_subject = vim.fn.escape(range.state.subject, "\\")
+
   print(vim.inspect(c))
   return string.format(
     ":'[,']%s/%s/%s/g%s<Left><Left>%s",
     c.prefix,
-    escaped_subject,
+    c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject,
     c.prompt_current_text and escaped_subject or "",
     c.confirm and "c" or "",
     c.confirm and "<left>" or ""

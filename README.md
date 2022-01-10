@@ -116,7 +116,7 @@ After adding this map, if you execute `<leader>s<motion1><motion2>` then the com
 
 Alternatively, we can also select `motion1` in visual mode and then hit `<leader>s<motion2>` for the same effect.
 
-For convenience, `<leader>ss<motion2>` can be used to select word under the cursor as motion1.
+For convenience, `<leader>ss<motion2>` can be used to select complete word under the cursor as motion1 (complete word means that `complete_word` options is override to `true` so is different from <leader>siwip which will not require that there be word boundaries on each match).
 
 You can override any default configuration (described later) by passing this to the operator function. By example, this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
@@ -143,6 +143,12 @@ Substitution command replace part will be set to the current text. Eg. instead o
 Default : `false`
 
 Will ask for confirmation for each substitutions.
+
+#### `range.complete_word`
+
+Default : `false`
+
+Will require that there be word boundaries on each match (eg: `\<word\>` instead of `word`).
 
 ### Integration
 

@@ -10,6 +10,7 @@ local function with_defaults(options)
       prefix = options.range and options.range.prefix or "s",
       prompt_current_text = options.range and options.range.prompt_current_text or false,
       confirm = options.range and options.range.confirm or false,
+      complete_word = options.range and options.range.complete_word or false,
     },
   }
 end
@@ -23,6 +24,7 @@ function config.get_range(overrides)
     prefix = overrides.prefix or config.options.range.prefix,
     prompt_current_text = overrides.prompt_current_text or config.options.range.prompt_current_text,
     confirm = overrides.confirm or config.options.range.confirm,
+    complete_word = overrides.complete_word or config.options.complete_word,
   }
 end
 
