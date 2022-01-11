@@ -88,8 +88,8 @@ vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').visual()<cr>",
 or
 
 ```viml
-xmap p <cmd>lua require('substitute').operator()<cr>
-xmap P <cmd>lua require('substitute').operator()<cr>
+xmap p <cmd>lua require('substitute').visual()<cr>
+xmap P <cmd>lua require('substitute').visual()<cr>
 ```
 
 </details>
