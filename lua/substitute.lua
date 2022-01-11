@@ -51,7 +51,7 @@ function substitute.line()
   substitute.state.register = vim.v.register
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
   local keys = vim.api.nvim_replace_termcodes(
-    string.format("g@:normal! 0v%s$<cr>", vim.v.count > 0 and vim.v.count - 1 .. "j" or ""),
+    string.format("g@:normal! V%s$<cr>", vim.v.count > 0 and vim.v.count - 1 .. "j" or ""),
     true,
     false,
     true

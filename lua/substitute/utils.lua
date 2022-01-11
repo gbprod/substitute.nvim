@@ -40,4 +40,5 @@ function utils.get_default_register()
 
   return '"'
 end
+
 return utils

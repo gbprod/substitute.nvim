@@ -38,6 +38,14 @@ describe("Substitute", function()
     assert.are.same({ "Lorem", "Lorem", "dolor", "sit", "amet" }, get_buf_lines())
   end)
 
+  it("should substitute last empty line", function()
+    execute_keys("yw")
+    execute_keys("Go<esc>")
+    execute_keys("ss")
+
+    assert.are.same({ "Lorem", "ipsum", "dolor", "sit", "amet", "Lorem" }, get_buf_lines())
+  end)
+
   it("should substitute line from register", function()
     vim.fn.setreg("a", "substitute", "")
     execute_keys('"ass')
