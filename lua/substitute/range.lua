@@ -70,23 +70,23 @@ end
 
 local function create_replace_command()
   local c = config.get_range(range.state.overrides)
-  local escaped_subject = vim.fn.escape(range.state.subject, "\\")
+  local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
+  local escaped_replacement = c.prompt_current_text and vim.fn.escape(range.state.subject, "/\\") or ""
 
   return string.format(
-    ":'[,']%s/%s/%s/g%s<Left><Left>%s",
+    vim.api.nvim_replace_termcodes(":'[,']%s/%s/%s/g%s<Left><Left>%s", true, false, true),
     c.prefix,
     c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject,
-    c.prompt_current_text and escaped_subject or "",
+    escaped_replacement,
     c.confirm and "c" or "",
-    c.confirm and "<left>" or ""
+    c.confirm and vim.api.nvim_replace_termcodes("<left>", true, false, true) or ""
   )
 end
 
 function range.selection_operator_callback()
   range.clear_match()
 
-  local keys = vim.api.nvim_replace_termcodes(create_replace_command(), true, false, true)
-  vim.api.nvim_feedkeys(keys, "tn", true)
+  vim.api.nvim_feedkeys(create_replace_command(), "tn", true)
 end
 
 return range
