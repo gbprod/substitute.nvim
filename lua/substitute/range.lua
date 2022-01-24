@@ -53,14 +53,14 @@ function range.clear_match()
 end
 
 function range.operator_callback(vmode)
-  local region = utils.get_region(vmode)
-  if region.start_row ~= region.end_row then
+  local regions = utils.get_regions(vmode)
+  if vim.tbl_count(regions) ~= 1 or regions[1].start_row ~= regions[1].end_row then
     vim.notify("Multiline is not supported by SubstituteRange", vim.log.levels.INFO)
     return
   end
 
-  local line = vim.api.nvim_buf_get_lines(0, region.start_row - 1, region.end_row, true)
-  range.state.subject = string.sub(line[1], region.start_col + 1, region.end_col + 1)
+  local line = vim.api.nvim_buf_get_lines(0, regions[1].start_row - 1, regions[1].end_row, true)
+  range.state.subject = string.sub(line[1], regions[1].start_col + 1, regions[1].end_col + 1)
 
   create_match()
 
