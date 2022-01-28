@@ -17,17 +17,7 @@ describe("Substitute", function()
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_command("buffer " .. buf)
 
-    vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-    vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-    vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-
-    vim.api.nvim_buf_set_lines(0, 0, -1, true, {
-      "Lorem",
-      "ipsum",
-      "dolor",
-      "sit",
-      "amet",
-    })
+    vim.api.nvim_buf_set_lines(0, 0, -1, true, { "Lorem", "ipsum", "dolor", "sit", "amet" })
   end)
 
   it("should substitute line", function()
@@ -112,6 +102,14 @@ describe("Substitute", function()
 
     assert.are.same({ "Lorem", "Lorem", "amet" }, get_buf_lines())
   end)
+
+  it("should substitute in visual mode", function()
+    execute_keys("yw")
+    execute_keys("jv$")
+    execute_keys("s")
+
+    assert.are.same({ "Lorem", "Lorem", "dolor", "sit", "amet" }, get_buf_lines())
+  end)
 end)
 
 describe("On substitute option", function()
@@ -127,5 +125,49 @@ describe("On substitute option", function()
     execute_keys("sw")
 
     assert(called)
+  end)
+end)
+
+describe("When yank_substitued_text is set", function()
+  before_each(function()
+    substitute.setup()
+
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_command("buffer " .. buf)
+
+    vim.api.nvim_buf_set_lines(0, 0, -1, true, { "Lorem", "ipsum", "dolor", "sit", "amet" })
+  end)
+
+  it("should yank in default register", function()
+    substitute.setup({ yank_substitued_text = true })
+
+    execute_keys("yw")
+    execute_keys("j")
+    execute_keys("sw")
+
+    assert.are.same("ipsum", vim.fn.getreg())
+    assert.are.same("v", vim.fn.getregtype())
+  end)
+
+  it("should yank in default register in visual mode", function()
+    substitute.setup({ yank_substitued_text = true })
+
+    execute_keys("ywj")
+    execute_keys("vjj")
+    execute_keys("s")
+
+    assert.are.same("ipsum\ndolor\ns", vim.fn.getreg())
+    assert.are.same("v", vim.fn.getregtype())
+  end)
+
+  it("should yank in default register in ctrl-v mode", function()
+    substitute.setup({ yank_substitued_text = true })
+
+    execute_keys("ywj")
+    execute_keys("<c-v>jjl")
+    execute_keys("s")
+
+    assert.are.same("ip\ndo\nsi", vim.fn.getreg())
+    assert.are.same(vim.api.nvim_replace_termcodes("<c-v>2", true, false, true), vim.fn.getregtype())
   end)
 end)

@@ -17,17 +17,21 @@ function substitute.operator()
   vim.api.nvim_feedkeys("g@", "i", false)
 end
 
-local function do_substitution(start_row, start_col, end_row, end_col, register)
+local function do_substitution(regions, register, vmode)
   local replacement = vim.fn.getreg(register)
 
   if config.options.yank_substitued_text then
     vim.fn.setreg(
       utils.get_default_register(),
-      table.concat(utils.nvim_buf_get_text(start_row, start_col, end_row, end_col), "\n")
+      table.concat(utils.get_text(regions), "\n"),
+      utils.get_register_type(vmode)
     )
   end
 
-  vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col, vim.split(replacement:gsub("\n$", ""), "\n"))
+  local text = vim.split(replacement:gsub("\n$", ""), "\n")
+  for _, region in ipairs(regions) do
+    vim.api.nvim_buf_set_text(0, region.start_row - 1, region.start_col, region.end_row - 1, region.end_col + 1, text)
+  end
 
   if config.options.on_substitute ~= nil then
     config.options.on_substitute({
@@ -37,14 +41,8 @@ local function do_substitution(start_row, start_col, end_row, end_col, register)
 end
 
 function substitute.operator_callback(vmode)
-  local region = utils.get_region(vmode)
-  do_substitution(
-    region.start_row - 1,
-    region.start_col,
-    region.end_row - 1,
-    region.end_col + 1,
-    substitute.state.register
-  )
+  local regions = utils.get_regions(vmode)
+  do_substitution(regions, substitute.state.register, vmode)
 end
 
 function substitute.line()
@@ -67,8 +65,8 @@ end
 
 function substitute.visual()
   substitute.state.register = vim.v.register
-  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  vim.api.nvim_feedkeys("g@`>", "i", false)
+  vim.cmd([[execute "normal! \<esc>"]])
+  substitute.operator_callback(vim.fn.visualmode())
 end
 
 return substitute
