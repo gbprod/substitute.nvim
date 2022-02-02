@@ -10,21 +10,22 @@ range.state = {
 }
 
 function range.operator(options)
-  range.state.overrides = options or {}
+  range.state.overrides = config.get_range(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys("g@", "i", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "i", false)
 end
 
 function range.visual(options)
-  range.state.overrides = options or {}
-  vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys("g@`>", "i", false)
+  options = config.get_range(options or {})
+  options.motion1 = "`>"
+  range.operator(options)
 end
 
 function range.word(options)
-  range.state.overrides = options or { complete_word = true }
-  vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys("g@iw", "i", false)
+  options = config.get_range(options or {})
+  options.motion1 = "iw"
+  options.complete_word = true
+  range.operator(options)
 end
 
 local function create_match()
@@ -59,13 +60,15 @@ function range.operator_callback(vmode)
     return
   end
 
+  local c = config.get_range(range.state.overrides)
+
   local line = vim.api.nvim_buf_get_lines(0, regions[1].start_row - 1, regions[1].end_row, true)
   range.state.subject = string.sub(line[1], regions[1].start_col + 1, regions[1].end_col + 1)
 
   create_match()
 
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
-  vim.api.nvim_feedkeys("g@", "t", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "i", false)
 end
 
 local function create_replace_command()

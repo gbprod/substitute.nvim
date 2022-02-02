@@ -150,6 +150,28 @@ Default : `false`
 
 Will require that there be word boundaries on each match (eg: `\<word\>` instead of `word`).
 
+#### `range.motion1`
+
+Default : `false`
+
+This will use this motion for the first motion of range substitution.
+
+eg. `lua require('substitute.range').operator({ motion1 = 'iW' })` will select
+inner WORD as subject of substitution.
+
+#### `range.motion2`
+
+Default : `false`
+
+This will use this motion for the second motion of range substitution.
+
+eg. `lua require('substitute.range').operator({ motion2 = 'ap' })` will select
+around paragraph as range of substitution.
+
+You can combine `motion1` and `motion2` :
+`lua require('substitute.range').operator({ motion1='iw', motion2 = 'ap' })`
+will prepare substitution for inner word around paragraph.
+
 ### Integration
 
 <details>
