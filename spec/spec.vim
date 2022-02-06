@@ -13,4 +13,5 @@ lua vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()
 
 lua vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true, })
 
-
+lua vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+lua vim.api.nvim_set_keymap("x", "sx", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })

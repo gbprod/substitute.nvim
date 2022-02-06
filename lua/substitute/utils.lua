@@ -81,4 +81,95 @@ function utils.get_register_type(vmode)
   return "c"
 end
 
+-- Returns
+--  < if origin comes before target
+--  > if origin comes after target
+--  [ if origin includes target
+--  ] if origin is included in target
+--  = if origin and target overlap
+function utils.compare_regions(origin_regions, target_regions)
+  if vim.tbl_count(origin_regions) ~= 1 or vim.tbl_count(target_regions) ~= 1 then
+    vim.notify("Exchange doesn't works with blockwise selections yet...", vim.log.levels.INFO, {})
+    return "="
+  end
+
+  --  < if origin comes before target
+  if
+    origin_regions[1].end_row < target_regions[1].start_row
+    or (
+      origin_regions[1].end_row == target_regions[1].start_row
+      and origin_regions[1].end_col < target_regions[1].start_col
+    )
+  then
+    return "<"
+  end
+
+  --  > if origin comes after target
+  if
+    origin_regions[1].start_row > target_regions[1].end_row
+    or (
+      origin_regions[1].start_row == target_regions[1].end_row
+      and origin_regions[1].start_col > target_regions[1].end_col
+    )
+  then
+    return ">"
+  end
+
+  --  [ if origin includes target
+  if
+    (
+      origin_regions[1].start_row < target_regions[1].start_row
+      or (
+        target_regions[1].start_row == origin_regions[1].start_row
+        and origin_regions[1].start_col < target_regions[1].start_col
+      )
+    )
+    and (
+      origin_regions[1].end_row > target_regions[1].end_row
+      or (
+        target_regions[1].end_row == origin_regions[1].end_row
+        and origin_regions[1].end_col > target_regions[1].end_col
+      )
+    )
+  then
+    return "["
+  end
+
+  --  ] if origin includes target
+  if
+    (
+      target_regions[1].start_row < origin_regions[1].start_row
+      or (
+        target_regions[1].start_row == origin_regions[1].start_row
+        and target_regions[1].start_col < origin_regions[1].start_col
+      )
+    )
+    and (
+      target_regions[1].end_row > origin_regions[1].end_row
+      or (
+        origin_regions[1].end_row == target_regions[1].end_row
+        and target_regions[1].end_col > origin_regions[1].end_col
+      )
+    )
+  then
+    return "]"
+  end
+
+  return "="
+end
+
+function utils.highlight_regions(regions, hl_group, ns_id)
+  for _, region in ipairs(regions) do
+    for line = region.start_row, region.end_row do
+      vim.api.nvim_buf_add_highlight(
+        0,
+        ns_id,
+        hl_group,
+        line - 1,
+        line == region.start_row and region.start_col or 0,
+        line == region.end_row and region.end_col + 1 or -1
+      )
+    end
+  end
+end
 return utils
