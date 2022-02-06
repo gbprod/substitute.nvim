@@ -14,6 +14,9 @@ local function with_defaults(options)
       motion1 = options.range and options.range.motion1 or false,
       motion2 = options.range and options.range.motion2 or false,
     },
+    exchange = {
+      motion = nil,
+    },
   }
 end
 
@@ -29,6 +32,12 @@ function config.get_range(overrides)
     complete_word = overrides.complete_word or config.options.range.complete_word,
     motion1 = overrides.motion1 or config.options.range.motion1,
     motion2 = overrides.motion2 or config.options.range.motion2,
+  }
+end
+
+function config.get_exchange(overrides)
+  return {
+    motion = overrides.motion or config.options.exchange.motion,
   }
 end
 

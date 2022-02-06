@@ -2,9 +2,11 @@
 
 [![Integration](https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml/badge.svg)](https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml)
 
-`substitute.nvim` aim is to provide new operator motions to make it very easy to perform quick substitutions.
+`substitute.nvim` aim is to provide new operator motions to make it very easy to perform quick substitutions and exchange.
 
-If you are familiar with [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive), this plugin does almost the same but rewritten in `lua` (and I hope this will be more maintainable, readable and efficient).
+If you are familiar with [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) and
+[tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange), this plugin does almost the same but
+rewritten in `lua` (and I hope this will be more maintainable, readable and efficient).
 
 This is a beta version, expect bugs ;) (but I use it daily).
 
@@ -12,7 +14,7 @@ This is a beta version, expect bugs ;) (but I use it daily).
 
 Requires neovim > 0.6.0.
 
-Using [https://github.com/wbthomason/packer.nvim](packer):
+Using [packer](https://github.com/wbthomason/packer.nvim):
 
 ```lua
 use({
@@ -43,7 +45,9 @@ nnoremap S <cmd>lua require('substitute').eol()<cr>
 xnoremap s <cmd>lua require('substitute').visual()<cr>
 ```
 
-Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of the default register (or an explicit register if provided). For example, you could execute siw to replace the current word under the cursor with the current yank, or sip to replace the paragraph, etc.
+Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of
+the default register (or an explicit register if provided). For example, you could execute siw to replace the
+current word under the cursor with the current yank, or sip to replace the paragraph, etc.
 
 This action is dot-repeatable.
 
@@ -78,7 +82,8 @@ require("substitute").setup({
 })
 ```
 
-[vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode. With this plugin, you can add thoss mappings to enable it :
+[vim-yoink](https://github.com/svermeulen/vim-yoink) does not support swapping when doing paste in visual mode.
+With this plugin, you can add thoss mappings to enable it :
 
 ```lua
 vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').visual()<cr>", {})
@@ -96,7 +101,8 @@ xmap P <cmd>lua require('substitute').visual()<cr>
 
 ## Substitute over range motion
 
-Another operator provided allows specifying both the text to replace and the line range over which to apply the change by using multiple consecutive motions.
+Another operator provided allows specifying both the text to replace and the line range over which to apply the
+change by using multiple consecutive motions.
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
@@ -112,13 +118,18 @@ xmap <leader>s <cmd>lua require('substitute.range').visual()<cr>
 nmap <leader>ss <cmd>lua require('substitute.range').word()<cr>
 ```
 
-After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a substitute command that allow to replace the text given by `motion1` by the text will enter in the command line for each line provided by `motion2`.
+After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a
+substitute command that allow to replace the text given by `motion1` by the text will enter in the command line for each
+line provided by `motion2`.
 
 Alternatively, we can also select `motion1` in visual mode and then hit `<leader>s<motion2>` for the same effect.
 
-For convenience, `<leader>ss<motion2>` can be used to select complete word under the cursor as motion1 (complete word means that `complete_word` options is override to `true` so is different from <leader>siwip which will not require that there be word boundaries on each match).
+For convenience, `<leader>ss<motion2>` can be used to select complete word under the cursor as motion1 (complete word
+means that `complete_word` options is override to `true` so is different from <leader>siwip which will not require that
+there be word boundaries on each match).
 
-You can override any default configuration (described later) by passing this to the operator function. By example, this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
+You can override any default configuration (described later) by passing this to the operator function. By example,
+this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
 ```viml
 nmap <leader>S <cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>
@@ -197,8 +208,39 @@ Default : `s`
 
 Function that will be called each times a substitution is made. This function takes a `param` argument that contains the `register` used for substitution.
 
+## Exchange operator
+
+This operator allows to quickly exchange text inside a buffer.
+
+Eg. To exchange two words, place your cursor on the first word and type `sxiw`. Then move to the second word and type
+`sxiw` again.
+Note: the {motion} used in the first and second use of `sx` don't have to be the same.
+Note 2: this is dot-repeatable, so you can use `.` instead of `sxiw` for the second word.
+
+```lua
+vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>")
+```
+
+or
+
+```viml
+nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
+xmap X <cmd>lua require('substitute.exchange').visual()<cr>
+```
+
+#### `exchange.motion`
+
+Default : `nil`
+
+This will use this motion for exchange.
+
+eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will select
+around paragraph as range of exchange.
+
 ## Credits
 
-This plugin is a lua version of [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) awesome plugin.
+This plugin is a lua version of [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) and
+[tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) awesome plugins.
 
 Thanks to [m00qek lua plugin template](https://github.com/m00qek/plugin-template.nvim).

@@ -205,3 +205,204 @@ describe("Get text", function()
     assert.are.same({ "ipsum", "elit." }, text)
   end)
 end)
+
+describe("Compare regions", function()
+  before_each(create_test_buffer)
+
+  it("Should return < if before", function()
+    local cmp = utils.compare_regions(
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 1,
+        end_col = 5,
+      } },
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 3,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal("<", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 1,
+        end_col = 5,
+      } },
+      { {
+        start_row = 1,
+        start_col = 6,
+        end_row = 3,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal("<", cmp)
+  end)
+
+  it("Should return > if after", function()
+    local cmp = utils.compare_regions(
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 3,
+        end_col = 5,
+      } },
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 1,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal(">", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 1,
+        start_col = 6,
+        end_row = 3,
+        end_col = 5,
+      } },
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 1,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal(">", cmp)
+  end)
+
+  it("Should return [ if origin includes target", function()
+    local cmp = utils.compare_regions(
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 3,
+        end_col = 6,
+      } },
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 2,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal("[", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 0,
+        start_col = 6,
+        end_row = 2,
+        end_col = 4,
+      } },
+      { {
+        start_row = 0,
+        start_col = 7,
+        end_row = 2,
+        end_col = 3,
+      } }
+    )
+
+    assert.are.equal("[", cmp)
+  end)
+
+  it("Should return ] if target includes origin", function()
+    local cmp = utils.compare_regions(
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 2,
+        end_col = 5,
+      } },
+      { {
+        start_row = 0,
+        start_col = 0,
+        end_row = 3,
+        end_col = 6,
+      } }
+    )
+
+    assert.are.equal("]", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 0,
+        start_col = 7,
+        end_row = 2,
+        end_col = 3,
+      } },
+      { {
+        start_row = 0,
+        start_col = 6,
+        end_row = 2,
+        end_col = 4,
+      } }
+    )
+
+    assert.are.equal("]", cmp)
+  end)
+
+  it("Should return = if overlap", function()
+    local cmp = utils.compare_regions(
+      { {
+        start_row = 1,
+        start_col = 0,
+        end_row = 3,
+        end_col = 5,
+      } },
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 4,
+        end_col = 5,
+      } }
+    )
+
+    assert.are.equal("=", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 2,
+        end_col = 2,
+      } },
+      { {
+        start_row = 2,
+        start_col = 1,
+        end_row = 2,
+        end_col = 3,
+      } }
+    )
+
+    assert.are.equal("=", cmp)
+
+    cmp = utils.compare_regions(
+      { {
+        start_row = 2,
+        start_col = 1,
+        end_row = 2,
+        end_col = 3,
+      } },
+      { {
+        start_row = 2,
+        start_col = 0,
+        end_row = 2,
+        end_col = 2,
+      } }
+    )
+
+    assert.are.equal("=", cmp)
+  end)
+end)
