@@ -33,9 +33,9 @@ function utils.get_regions(vmode)
   return {
     {
       start_row = start[1],
-      start_col = start[2],
+      start_col = vmode ~= "line" and start[2] or 0,
       end_row = finish[1],
-      end_col = end_row_len >= finish[2] and finish[2] or end_row_len,
+      end_col = (end_row_len >= finish[2] and vmode ~= "line") and finish[2] or end_row_len,
     },
   }
 end
