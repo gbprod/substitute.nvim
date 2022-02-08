@@ -9,6 +9,9 @@ substitute.state = {
 
 function substitute.setup(options)
   substitute.config = config.setup(options)
+
+  vim.highlight.link("SubstituteRange", "Search")
+  vim.highlight.link("SubstituteExchange", "Search")
 end
 
 function substitute.operator()

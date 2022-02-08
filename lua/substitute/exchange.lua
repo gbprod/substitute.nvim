@@ -7,7 +7,7 @@ local hl_namespace = vim.api.nvim_create_namespace("substitute.exchange")
 
 local prepare_exchange = function(vmode)
   local regions = utils.get_regions(vmode)
-  utils.highlight_regions(regions, "Search", hl_namespace)
+  utils.highlight_regions(regions, "SubstituteExchange", hl_namespace)
 
   vim.b.exchange_origin = regions
 

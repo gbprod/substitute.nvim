@@ -29,7 +29,7 @@ function range.word(options)
 end
 
 local function create_match()
-  range.state.match = vim.fn.matchadd("Search", vim.fn.escape(range.state.subject, "\\"), 2)
+  range.state.match = vim.fn.matchadd("SubstituteRange", vim.fn.escape(range.state.subject, "\\"), 2)
 
   vim.cmd([[
     augroup SubstituteClearMatch
