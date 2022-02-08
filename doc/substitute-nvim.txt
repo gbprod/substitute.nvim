@@ -4,7 +4,7 @@
 Table of Contents                          *substitute-nvim-table-of-contents*
 
 1. substitute.nvim                           |substitute-nvim-substitute.nvim|
-  - Usage                                              |substitute-nvim-usage|
+  - Install                                          |substitute-nvim-install|
   - Substitute operator                  |substitute-nvim-substitute-operator|
   - Substitute over range motion|substitute-nvim-substitute-over-range-motion|
   - Exchange operator                      |substitute-nvim-exchange-operator|
@@ -27,9 +27,16 @@ If you are familiar with svermeulen/vim-subversive
 rewritten in `lua` (and I hope this will be more maintainable, readable and
 efficient).
 
-This is a beta version, expect bugs ;) (but I use it daily).
+TABLE OF CONTENT
 
-USAGE                                                  *substitute-nvim-usage*
+
+- |substitute-nvim-install|
+- |substitute-nvim-substitute-operator|
+- |substitute-nvim-substitute-over-range-motion|
+- |substitute-nvim-credits|
+
+
+INSTALL                                              *substitute-nvim-install*
 
 Requires neovim > 0.6.0.
 
