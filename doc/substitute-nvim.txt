@@ -33,6 +33,7 @@ TABLE OF CONTENT
 - |substitute-nvim-install|
 - |substitute-nvim-substitute-operator|
 - |substitute-nvim-substitute-over-range-motion|
+- |substitute-nvim-exchange-operator|
 - |substitute-nvim-credits|
 
 
