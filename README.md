@@ -13,6 +13,7 @@ rewritten in `lua` (and I hope this will be more maintainable, readable and effi
 - [Install](#install)
 - [Substitute operator](#substitute-operator)
 - [Substitute over range motion](#substitute-over-range-motion)
+- [Exchange operator](#exchange-operator)
 - [Credits](#credits)
 
 ## Install
