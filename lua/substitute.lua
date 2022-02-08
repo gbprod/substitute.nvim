@@ -14,10 +14,10 @@ function substitute.setup(options)
   vim.highlight.link("SubstituteExchange", "Search")
 end
 
-function substitute.operator()
+function substitute.operator(motion)
   substitute.state.register = vim.v.register
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  vim.api.nvim_feedkeys("g@", "i", false)
+  vim.api.nvim_feedkeys("g@" .. (motion or ""), "i", false)
 end
 
 local function do_substitution(regions, register, vmode)
@@ -49,21 +49,11 @@ function substitute.operator_callback(vmode)
 end
 
 function substitute.line()
-  substitute.state.register = vim.v.register
-  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  local keys = vim.api.nvim_replace_termcodes(
-    string.format("g@:normal! V%s$<cr>", vim.v.count > 0 and vim.v.count - 1 .. "j" or ""),
-    true,
-    false,
-    true
-  )
-  vim.api.nvim_feedkeys(keys, "i", false)
+  substitute.operator((vim.v.count > 0 and vim.v.count or "") .. "_")
 end
 
 function substitute.eol()
-  substitute.state.register = vim.v.register
-  vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  vim.api.nvim_feedkeys("g@$", "i", false)
+  substitute.operator("$")
 end
 
 function substitute.visual()
