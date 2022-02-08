@@ -225,6 +225,7 @@ Note 2: this is dot-repeatable, so you can use `.` instead of `sxiw` for the sec
 
 ```lua
 vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>")
 ```
 
@@ -232,6 +233,7 @@ or
 
 ```viml
 nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
+nmap sxx <cmd>lua require('substitute.exchange').line()<cr>
 xmap X <cmd>lua require('substitute.exchange').visual()<cr>
 ```
 

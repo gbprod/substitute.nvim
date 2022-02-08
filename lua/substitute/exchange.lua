@@ -76,6 +76,12 @@ function exchange.visual(options)
   exchange.operator(options)
 end
 
+function exchange.line(options)
+  options = config.get_exchange(options or {})
+  options.motion = (vim.v.count > 0 and vim.v.count or "") .. "_"
+  exchange.operator(options)
+end
+
 function exchange.operator_callback(vmode)
   if vmode == vim.api.nvim_replace_termcodes("<c-v>", true, false, true) then
     vim.notify("Exchange doesn't works with blockwise selections (for the moment)", vim.log.levels.INFO, {})
