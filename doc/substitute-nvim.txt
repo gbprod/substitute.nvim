@@ -33,6 +33,7 @@ TABLE OF CONTENT
 - |substitute-nvim-install|
 - |substitute-nvim-substitute-operator|
 - |substitute-nvim-substitute-over-range-motion|
+- |substitute-nvim-exchange-operator|
 - |substitute-nvim-credits|
 
 
@@ -276,6 +277,7 @@ dot-repeatable, so you can use `.` instead of `sxiw` for the second word.
 
 >
     vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+    vim.api.nvim_set_keymap("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
     vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>")
 <
 
@@ -284,6 +286,7 @@ or
 
 >
     nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
+    nmap sxx <cmd>lua require('substitute.exchange').line()<cr>
     xmap X <cmd>lua require('substitute.exchange').visual()<cr>
 <
 
