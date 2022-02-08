@@ -7,6 +7,7 @@ Table of Contents                          *substitute-nvim-table-of-contents*
   - Usage                                              |substitute-nvim-usage|
   - Substitute operator                  |substitute-nvim-substitute-operator|
   - Substitute over range motion|substitute-nvim-substitute-over-range-motion|
+  - Exchange operator                      |substitute-nvim-exchange-operator|
   - Credits                                          |substitute-nvim-credits|
 
 ==============================================================================
@@ -18,12 +19,13 @@ title=''/>
 <https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml>
 
 `substitute.nvim` aim is to provide new operator motions to make it very easy
-to perform quick substitutions.
+to perform quick substitutions and exchange.
 
 If you are familiar with svermeulen/vim-subversive
-<https://github.com/svermeulen/vim-subversive>, this plugin does almost the
-same but rewritten in `lua` (and I hope this will be more maintainable,
-readable and efficient).
+<https://github.com/svermeulen/vim-subversive> and tommcdo/vim-exchange
+<https://github.com/tommcdo/vim-exchange>, this plugin does almost the same but
+rewritten in `lua` (and I hope this will be more maintainable, readable and
+efficient).
 
 This is a beta version, expect bugs ;) (but I use it daily).
 
@@ -31,7 +33,7 @@ USAGE                                                  *substitute-nvim-usage*
 
 Requires neovim > 0.6.0.
 
-Using https://github.com/wbthomason/packer.nvim:
+Using packer <https://github.com/wbthomason/packer.nvim>:
 
 >
     use({
@@ -256,10 +258,44 @@ CONFIGURATION ~
 Function that will be called each times a substitution is made. This function
 takes a `param` argument that contains the `register` used for substitution.
 
+EXCHANGE OPERATOR                          *substitute-nvim-exchange-operator*
+
+This operator allows to quickly exchange text inside a buffer.
+
+Eg. To exchange two words, place your cursor on the first word and type `sxiw`.
+Then move to the second word and type `sxiw` again. Note: the {motion} used in
+the first and second use of `sx` don’t have to be the same. Note 2: this is
+dot-repeatable, so you can use `.` instead of `sxiw` for the second word.
+
+>
+    vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+    vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>")
+<
+
+
+or
+
+>
+    nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
+    xmap X <cmd>lua require('substitute.exchange').visual()<cr>
+<
+
+
+                                           *substitute-nvim-`exchange.motion`*
+
+`exchange.motion`                      Default : `nil`
+
+
+This will use this motion for exchange.
+
+eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will
+select around paragraph as range of exchange.
+
 CREDITS                                              *substitute-nvim-credits*
 
 This plugin is a lua version of svermeulen/vim-subversive
-<https://github.com/svermeulen/vim-subversive> awesome plugin.
+<https://github.com/svermeulen/vim-subversive> and tommcdo/vim-exchange
+<https://github.com/tommcdo/vim-exchange> awesome plugins.
 
 Thanks to m00qek lua plugin template
 <https://github.com/m00qek/plugin-template.nvim>.
