@@ -8,9 +8,14 @@ If you are familiar with [svermeulen/vim-subversive](https://github.com/svermeul
 [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange), this plugin does almost the same but
 rewritten in `lua` (and I hope this will be more maintainable, readable and efficient).
 
-This is a beta version, expect bugs ;) (but I use it daily).
+##### Table of content
 
-## Usage
+- [Install](#install)
+- [Substitute operator](#substitute-operator)
+- [Substitute over range motion](#substitute-over-range-motion)
+- [Credits](#credits)
+
+## Install
 
 Requires neovim > 0.6.0.
 
