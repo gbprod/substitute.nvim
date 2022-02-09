@@ -8,6 +8,8 @@ If you are familiar with [svermeulen/vim-subversive](https://github.com/svermeul
 [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange), this plugin does almost the same but
 rewritten in `lua` (and I hope this will be more maintainable, readable and efficient).
 
+[See this plugin in action](DEMO.md)
+
 ##### Table of content
 
 - [Install](#install)
