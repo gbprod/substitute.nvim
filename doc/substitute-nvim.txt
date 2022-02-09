@@ -27,6 +27,8 @@ If you are familiar with svermeulen/vim-subversive
 rewritten in `lua` (and I hope this will be more maintainable, readable and
 efficient).
 
+See this plugin in action <DEMO.md>
+
 TABLE OF CONTENT
 
 
