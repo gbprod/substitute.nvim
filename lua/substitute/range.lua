@@ -12,13 +12,13 @@ range.state = {
 function range.operator(options)
   range.state.overrides = config.get_range(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "i", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "mi", false)
 end
 
 function range.visual(options)
-  options = config.get_range(options or {})
-  options.motion1 = "`>"
-  range.operator(options)
+  vim.cmd([[execute "normal! \<esc>"]])
+  range.state.overrides = config.get_range(options or {})
+  range.operator_callback(vim.fn.visualmode())
 end
 
 function range.word(options)
@@ -59,7 +59,6 @@ function range.operator_callback(vmode)
     vim.notify("Multiline is not supported by SubstituteRange", vim.log.levels.INFO)
     return
   end
-
   local c = config.get_range(range.state.overrides)
 
   local line = vim.api.nvim_buf_get_lines(0, regions[1].start_row - 1, regions[1].end_row, true)
@@ -68,7 +67,7 @@ function range.operator_callback(vmode)
   create_match()
 
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "i", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
 end
 
 local function create_replace_command()
@@ -89,7 +88,7 @@ end
 function range.selection_operator_callback()
   range.clear_match()
 
-  vim.api.nvim_feedkeys(create_replace_command(), "tn", true)
+  vim.api.nvim_feedkeys(create_replace_command(), "tm", true)
 end
 
 return range

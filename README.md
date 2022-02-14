@@ -114,8 +114,8 @@ change by using multiple consecutive motions.
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>")
-vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>")
+vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>", {})
+vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>", {})
 ```
 
 or
