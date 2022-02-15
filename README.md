@@ -222,13 +222,19 @@ This operator allows to quickly exchange text inside a buffer.
 
 Eg. To exchange two words, place your cursor on the first word and type `sxiw`. Then move to the second word and type
 `sxiw` again.
+
 Note: the {motion} used in the first and second use of `sx` don't have to be the same.
 Note 2: this is dot-repeatable, so you can use `.` instead of `sxiw` for the second word.
+
+You can select a whole line using the `line` function (`sxx` in the example below).
+
+Because this operator has to be invoked twice to change the document, if you change your mind after invoking the operator once, you can cancel you selection using the `cancel` function (mapped to `sxc` in the example below).
 
 ```lua
 vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>")
+vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
 ```
 
 or
@@ -237,6 +243,7 @@ or
 nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
 nmap sxx <cmd>lua require('substitute.exchange').line()<cr>
 xmap X <cmd>lua require('substitute.exchange').visual()<cr>
+nmap sxc <cmd>lua require('substitute.exchange').cancel()<cr>
 ```
 
 #### `exchange.motion`
