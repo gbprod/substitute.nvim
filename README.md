@@ -1,6 +1,7 @@
-# substitute.nvim
+# 🪠 substitute.nvim
 
-[![Integration](https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml/badge.svg)](https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml)
+![Lua](https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gbprod/substitute.nvim/Integration?style=for-the-badge)](https://github.com/gbprod/substitute.nvim/actions/workflows/integration.yml)
 
 `substitute.nvim` aim is to provide new operator motions to make it very easy to perform quick substitutions and exchange.
 
@@ -8,36 +9,82 @@ If you are familiar with [svermeulen/vim-subversive](https://github.com/svermeul
 [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange), this plugin does almost the same but
 rewritten in `lua` (and I hope this will be more maintainable, readable and efficient).
 
+## ✨ Features
+
+- [Substitute operator](#-substitute-operator)
+- [Substitute over range motion](#-substitute-over-range-motion)
+- [Exchange operator](#-exchange-operator)
+
 [See this plugin in action](DEMO.md)
 
-##### Table of content
+## ⚡️ Requirements
 
-- [Install](#install)
-- [Substitute operator](#substitute-operator)
-- [Substitute over range motion](#substitute-over-range-motion)
-- [Exchange operator](#exchange-operator)
-- [Credits](#credits)
+- Neovim >= 0.6.0
 
-## Install
+## 📦 Installation
 
-Requires neovim > 0.6.0.
+Install the plugin with your preferred package manager:
 
-Using [packer](https://github.com/wbthomason/packer.nvim):
+### [packer](https://github.com/wbthomason/packer.nvim)
 
 ```lua
+-- Lua
 use({
   "gbprod/substitute.nvim",
   config = function()
-    require("substitute").setup()
+    require("substitute").setup({
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    })
   end
 })
 ```
 
-## Substitute operator
+### [vim-plug](https://github.com/junegunn/vim-plug)
+
+```vim
+" Vim Script
+Plug 'gbprod/substitute.nvim'
+lua << EOF
+  require("substitute").setup({
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  })
+EOF
+```
+
+## ⚙️ Configuration
+
+Substitute comes with the following defaults:
+
+```lua
+{
+  on_substitute = nil,
+  yank_substitued_text = false,
+  range = {
+    prefix = "s",
+    prompt_current_text = false,
+    confirm = false,
+    complete_word = false,
+    motion1 = false,
+    motion2 = false,
+  },
+  exchange = {
+    motion = false,
+  },
+}
+```
+
+More details on these options is available in the sections below corresponding to the different features.
+
+## 🔂 Substitute operator
 
 It contains no default mappings and will have no effect until you add your own maps to it.
 
 ```lua
+-- Lua
 vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
@@ -47,6 +94,7 @@ vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>",
 Or
 
 ```viml
+" Vim Script
 nnoremap s <cmd>lua require('substitute').operator()<cr>
 nnoremap ss <cmd>lua require('substitute').line()<cr>
 nnoremap S <cmd>lua require('substitute').eol()<cr>
@@ -61,7 +109,7 @@ This action is dot-repeatable.
 
 Note: in this case you will be shadowing the change character key `s` so you will have to use the longer form `cl`.
 
-### Configuration
+### ⚙️ Configuration
 
 #### `on_substitute`
 
@@ -75,7 +123,7 @@ Default : `false`
 
 If `true`, when performing a substitution, substitued text is pushed into the default register.
 
-### Integration
+### 🤝 Integration
 
 <details>
 <summary><b>svermeulen/vim-yoink</b></summary>
@@ -107,7 +155,7 @@ xmap P <cmd>lua require('substitute').visual()<cr>
 
 </details>
 
-## Substitute over range motion
+## 🔁 Substitute over range motion
 
 Another operator provided allows specifying both the text to replace and the line range over which to apply the
 change by using multiple consecutive motions.
@@ -143,7 +191,7 @@ this will use `S` as prefix of the substitution command (and use [tpope/vim-abol
 nmap <leader>S <cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>
 ```
 
-### Configuration
+### ⚙️ Configuration
 
 #### `range.prefix`
 
@@ -191,7 +239,7 @@ You can combine `motion1` and `motion2` :
 `lua require('substitute.range').operator({ motion1='iw', motion2 = 'ap' })`
 will prepare substitution for inner word around paragraph.
 
-### Integration
+### 🤝 Integration
 
 <details>
 <summary><b>tpope/vim-abolish</b></summary>
@@ -208,15 +256,7 @@ require("substitute").setup({
 
 </details>
 
-### Configuration
-
-#### `range.prefix`
-
-Default : `s`
-
-Function that will be called each times a substitution is made. This function takes a `param` argument that contains the `register` used for substitution.
-
-## Exchange operator
+## 🔀 Exchange operator
 
 This operator allows to quickly exchange text inside a buffer.
 
@@ -246,6 +286,8 @@ xmap X <cmd>lua require('substitute.exchange').visual()<cr>
 nmap sxc <cmd>lua require('substitute.exchange').cancel()<cr>
 ```
 
+### ⚙️ Configuration
+
 #### `exchange.motion`
 
 Default : `nil`
@@ -255,7 +297,7 @@ This will use this motion for exchange.
 eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will select
 around paragraph as range of exchange.
 
-## Credits
+## 🎉 Credits
 
 This plugin is a lua version of [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) and
 [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) awesome plugins.
