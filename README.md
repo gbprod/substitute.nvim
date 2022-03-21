@@ -297,6 +297,13 @@ This will use this motion for exchange.
 eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will select
 around paragraph as range of exchange.
 
+## 🎨 Colors
+
+| Description                           | Group              | Default        |
+| ------------------------------------- | ------------------ | -------------- |
+| Selected range for range substitution | SubstituteRange    | link to Search |
+| Selected text for exchange            | SubstituteExchange | link to Search |
+
 ## 🎉 Credits
 
 This plugin is a lua version of [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) and
