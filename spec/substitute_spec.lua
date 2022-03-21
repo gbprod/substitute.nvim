@@ -110,6 +110,30 @@ describe("Substitute", function()
 
     assert.are.same({ "Lorem", "Lorem", "dolor", "sit", "amet" }, get_buf_lines())
   end)
+
+  it("should be countable in charwise", function()
+    execute_keys("yw")
+    execute_keys("j")
+    execute_keys("3sw")
+
+    assert.are.same({ "Lorem", "LoremLoremLorem", "dolor", "sit", "amet" }, get_buf_lines())
+  end)
+
+  it("should be countable in linewise", function()
+    execute_keys("yy")
+    execute_keys("j")
+    execute_keys("3sw")
+
+    assert.are.same({ "Lorem", "Lorem", "Lorem", "Lorem", "dolor", "sit", "amet" }, get_buf_lines())
+  end)
+
+  it("should be countable in visual", function()
+    execute_keys("yw")
+    execute_keys("jV")
+    execute_keys("3s")
+
+    assert.are.same({ "Lorem", "LoremLoremLorem", "dolor", "sit", "amet" }, get_buf_lines())
+  end)
 end)
 
 describe("On substitute option", function()
