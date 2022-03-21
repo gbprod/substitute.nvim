@@ -11,6 +11,7 @@ Table of Contents                          *substitute-nvim-table-of-contents*
   - 🔂 Substitute operator        |substitute-nvim-🔂-substitute-operator|
   - 🔁 Substitute over range motion|substitute-nvim-🔁-substitute-over-range-motion|
   - 🔀 Exchange operator            |substitute-nvim-🔀-exchange-operator|
+  - 🎨 Colors                                  |substitute-nvim-🎨-colors|
   - 🎉 Credits                                |substitute-nvim-🎉-credits|
 
 ==============================================================================
@@ -362,6 +363,13 @@ This will use this motion for exchange.
 
 eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will
 select around paragraph as range of exchange.
+
+🎨 COLORS                                      *substitute-nvim-🎨-colors*
+
+│             Description             │      Group       │   Default    │
+│Selected range for range substitution│SubstituteRange   │link to Search│
+│Selected text for exchange           │SubstituteExchange│link to Search│
+
 
 🎉 CREDITS                                    *substitute-nvim-🎉-credits*
 
