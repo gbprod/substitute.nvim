@@ -3,7 +3,7 @@
 ==============================================================================
 Table of Contents                          *substitute-nvim-table-of-contents*
 
-1. 🪠 substitute.nvim                 |substitute-nvim-🪠-substitute.nvim|
+1. 🪓 substitute.nvim                 |substitute-nvim-🪓-substitute.nvim|
   - ✨ Features                                |substitute-nvim-✨-features|
   - ⚡️ Requirements                  |substitute-nvim-⚡️-requirements|
   - 📦 Installation                      |substitute-nvim-📦-installation|
@@ -15,7 +15,7 @@ Table of Contents                          *substitute-nvim-table-of-contents*
   - 🎉 Credits                                |substitute-nvim-🎉-credits|
 
 ==============================================================================
-1. 🪠 substitute.nvim                 *substitute-nvim-🪠-substitute.nvim*
+1. 🪓 substitute.nvim                 *substitute-nvim-🪓-substitute.nvim*
 
 <img
 src='https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua'
