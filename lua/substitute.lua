@@ -40,7 +40,10 @@ local function do_substitution(regions, register, count, vmode)
 
   if config.options.on_substitute ~= nil then
     config.options.on_substitute({
+      regions = regions,
       register = register,
+      count = count,
+      vmode = vmode,
     })
   end
 end
