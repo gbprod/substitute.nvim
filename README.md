@@ -126,6 +126,21 @@ If `true`, when performing a substitution, substitued text is pushed into the de
 ### 🤝 Integration
 
 <details>
+<summary><b>gbprod/yanky.nvim</b></summary>
+
+To enable [gbprod/yanky.nvim](https://github.com/gbprod/yanky.nvim) swap when performing a substitution, you can add this to your setup:
+
+```lua
+require("substitute").setup({
+  on_substitute = function(event)
+    require("yanky").init_ring("p", event.register, event.count, event.vmode:match("[vV]"))
+  end,
+})
+```
+
+</details>
+
+<details>
 <summary><b>svermeulen/vim-yoink</b></summary>
 
 To enable [vim-yoink](https://github.com/svermeulen/vim-yoink) swap when performing a substitution, you can add this to your setup:
