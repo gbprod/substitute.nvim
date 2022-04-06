@@ -166,6 +166,20 @@ default register.
 
 🤝 INTEGRATION ~
 
+gbprod/yanky.nvim ~
+
+To enable gbprod/yanky.nvim <https://github.com/gbprod/yanky.nvim> swap when
+performing a substitution, you can add this to your setup:
+
+>
+    require("substitute").setup({
+      on_substitute = function(event)
+        require("yanky").init_ring("p", event.register, event.count, event.vmode:match("[vV]"))
+      end,
+    })
+<
+
+
 svermeulen/vim-yoink ~
 
 To enable vim-yoink <https://github.com/svermeulen/vim-yoink> swap when
