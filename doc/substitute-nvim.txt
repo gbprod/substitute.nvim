@@ -156,9 +156,9 @@ will have to use the longer form `cl`.
 Function that will be called each times a substitution is made. This function
 takes a `param` argument that contains the `register` used for substitution.
 
-                                      *substitute-nvim-`yank_substituted_text`*
+                                     *substitute-nvim-`yank_substituted_text`*
 
-`yank_substituted_text`                 Default : `false`
+`yank_substituted_text`                Default : `false`
 
 
 If `true`, when performing a substitution, substitued text is pushed into the
