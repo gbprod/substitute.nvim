@@ -70,10 +70,19 @@ function range.operator_callback(vmode)
   vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
 end
 
+local function get_replacement(c)
+  local default_reg = utils.get_default_register()
+  if c.register == default_reg and c.prompt_current_text then
+    return range.state.subject
+  end
+
+  return c.register ~= default_reg and vim.fn.getreg(c.register) or ""
+end
+
 local function create_replace_command()
   local c = config.get_range(range.state.overrides)
   local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
-  local escaped_replacement = c.prompt_current_text and vim.fn.escape(range.state.subject, "/\\") or ""
+  local escaped_replacement = vim.fn.escape(get_replacement(c), "/\\"):gsub("\n$", ""):gsub("\n", "\\r") or ""
 
   return string.format(
     vim.api.nvim_replace_termcodes(":'[,']%s/%s/%s/g%s<Left><Left>%s", true, false, true),
