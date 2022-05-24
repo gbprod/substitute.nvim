@@ -246,6 +246,12 @@ Default : `false`
 
 Will require that there be word boundaries on each match (eg: `\<word\>` instead of `word`).
 
+#### `range.group_substituted_text`
+
+Default : `false`
+
+This will capture substitued text as you can use `\1` to quickly reuse it.
+
 #### `range.motion1`
 
 Default : `false`

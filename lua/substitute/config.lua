@@ -13,6 +13,7 @@ function config.setup(options)
       complete_word = false,
       motion1 = false,
       motion2 = false,
+      group_substituted_text = false,
     },
     exchange = {
       motion = nil,
