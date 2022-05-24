@@ -210,6 +210,9 @@ For convenience, `<leader>ss<motion2>` can be used to select complete word under
 means that `complete_word` options is override to `true` so is different from <leader>siwip which will not require that
 there be word boundaries on each match).
 
+You can select the default replacement value by selecting a register. Eg: `"a<leader>s<motion1><motion2>` will use the
+content of `a` register as replacement value.
+
 You can override any default configuration (described later) by passing this to the operator function. By example,
 this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
@@ -264,6 +267,15 @@ around paragraph as range of substitution.
 You can combine `motion1` and `motion2` :
 `lua require('substitute.range').operator({ motion1='iw', motion2 = 'ap' })`
 will prepare substitution for inner word around paragraph.
+
+#### `range.register`
+
+Default : `nil`
+
+This will use the content of this register as replacement value.
+
+eg. `lua require('substitute.range').operator({ register = 'a' })` will use `"a`
+register content as replacement.
 
 ### 🤝 Integration
 
