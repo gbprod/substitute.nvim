@@ -16,7 +16,7 @@ end
 
 function substitute.operator(options)
   options = options or {}
-  substitute.state.register = vim.v.register
+  substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
   vim.api.nvim_feedkeys("g@" .. (options.motion or ""), "i", false)
@@ -53,21 +53,29 @@ function substitute.operator_callback(vmode)
   do_substitution(regions, substitute.state.register, substitute.state.count, vmode)
 end
 
-function substitute.line()
-  local count = vim.v.count > 0 and vim.v.count or ""
+function substitute.line(options)
+  options = options or {}
+  local count = options.count or (vim.v.count > 0 and vim.v.count or "")
   substitute.operator({
     motion = count .. "_",
     count = 1,
+    register = options.register or vim.v.register,
   })
 end
 
-function substitute.eol()
-  substitute.operator({ motion = "$" })
+function substitute.eol(options)
+  options = options or {}
+  substitute.operator({
+    motion = "$",
+    register = options.register or vim.v.register,
+    count = options.count or (vim.v.count > 0 and vim.v.count or 1),
+  })
 end
 
-function substitute.visual()
-  substitute.state.register = vim.v.register
-  substitute.state.count = vim.v.count > 0 and vim.v.count or 1
+function substitute.visual(options)
+  options = options or {}
+  substitute.state.register = options.register or vim.v.register
+  substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
   vim.cmd([[execute "normal! \<esc>"]])
   substitute.operator_callback(vim.fn.visualmode())
 end
