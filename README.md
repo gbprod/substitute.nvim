@@ -109,6 +109,17 @@ This action is dot-repeatable.
 
 Note: in this case you will be shadowing the change character key `s` so you will have to use the longer form `cl`.
 
+Each functions (`operator`, `line`, `eol` and `visual`) are configurable:
+
+```lua
+lua require('substitute').operator({
+  count = 1,      -- number of substitutions
+  register = "a", -- register used for substitution
+  motion = "iw",  -- only available for `operator`, this will automatically use
+                  -- this operator for substitution instead of asking for.
+})
+```
+
 ### ⚙️ Configuration
 
 #### `on_substitute`
