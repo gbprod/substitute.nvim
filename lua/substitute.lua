@@ -25,7 +25,7 @@ end
 local function do_substitution(regions, register, count, vmode)
   local replacement = vim.fn.getreg(register)
 
-  if config.options.yank_substitued_text then
+  if config.options.yank_substituted_text then
     vim.fn.setreg(
       utils.get_default_register(),
       table.concat(utils.get_text(regions), "\n"),

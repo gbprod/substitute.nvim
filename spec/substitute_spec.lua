@@ -152,7 +152,7 @@ describe("On substitute option", function()
   end)
 end)
 
-describe("When yank_substitued_text is set", function()
+describe("When yank_substituted_text is set", function()
   before_each(function()
     substitute.setup()
 
@@ -163,7 +163,7 @@ describe("When yank_substitued_text is set", function()
   end)
 
   it("should yank in default register", function()
-    substitute.setup({ yank_substitued_text = true })
+    substitute.setup({ yank_substituted_text = true })
 
     execute_keys("yw")
     execute_keys("j")
@@ -174,7 +174,7 @@ describe("When yank_substitued_text is set", function()
   end)
 
   it("should yank in default register in visual mode", function()
-    substitute.setup({ yank_substitued_text = true })
+    substitute.setup({ yank_substituted_text = true })
 
     execute_keys("ywj")
     execute_keys("vjj")
@@ -185,7 +185,7 @@ describe("When yank_substitued_text is set", function()
   end)
 
   it("should yank in default register in ctrl-v mode", function()
-    substitute.setup({ yank_substitued_text = true })
+    substitute.setup({ yank_substituted_text = true })
 
     execute_keys("ywj")
     execute_keys("<c-v>jjl")

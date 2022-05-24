@@ -5,7 +5,7 @@ config.options = {}
 local function with_defaults(options)
   return {
     on_substitute = options.on_substitute or nil,
-    yank_substitued_text = options.yank_substitued_text or false,
+    yank_substituted_text = options.yank_substituted_text or false,
     range = {
       prefix = options.range and options.range.prefix or "s",
       prompt_current_text = options.range and options.range.prompt_current_text or false,

@@ -62,7 +62,7 @@ Substitute comes with the following defaults:
 ```lua
 {
   on_substitute = nil,
-  yank_substitued_text = false,
+  yank_substituted_text = false,
   range = {
     prefix = "s",
     prompt_current_text = false,
@@ -117,7 +117,7 @@ Default : `nil`
 
 Function that will be called each times a substitution is made. This function takes a `param` argument that contains the `register` used for substitution.
 
-#### `yank_substitued_text`
+#### `yank_substituted_text`
 
 Default : `false`
 
