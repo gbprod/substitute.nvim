@@ -70,25 +70,32 @@ function range.operator_callback(vmode)
   vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
 end
 
-local function get_replacement(c)
+local function get_escaped_replacement(c)
   local default_reg = utils.get_default_register()
   if c.register == default_reg and c.prompt_current_text then
     return range.state.subject
   end
 
-  return c.register ~= default_reg and vim.fn.getreg(c.register) or ""
+  local replacement = c.register ~= default_reg and vim.fn.getreg(c.register) or ""
+
+  return vim.fn.escape(replacement, "/\\"):gsub("\n$", ""):gsub("\n", "\\r") or ""
+end
+
+local function get_escaped_subject(c)
+  local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
+  escaped_subject = c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject
+
+  return c.group_substituted_text and string.format("\\(%s\\)", escaped_subject) or escaped_subject
 end
 
 local function create_replace_command()
   local c = config.get_range(range.state.overrides)
-  local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
-  local escaped_replacement = vim.fn.escape(get_replacement(c), "/\\"):gsub("\n$", ""):gsub("\n", "\\r") or ""
 
   return string.format(
     vim.api.nvim_replace_termcodes(":'[,']%s/%s/%s/g%s<Left><Left>%s", true, false, true),
     c.prefix,
-    c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject,
-    escaped_replacement,
+    get_escaped_subject(c),
+    get_escaped_replacement(c),
     c.confirm and "c" or "",
     c.confirm and vim.api.nvim_replace_termcodes("<left>", true, false, true) or ""
   )
