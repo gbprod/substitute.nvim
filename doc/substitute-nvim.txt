@@ -306,6 +306,13 @@ Will ask for confirmation for each substitutions.
 Will require that there be word boundaries on each match (eg: `\<word\>`
 instead of `word`).
 
+                              *substitute-nvim-`range.group_substituted_text`*
+
+`range.group_substituted_text`         Default : `false`
+
+
+This will capture substitued text as you can use `\1` to quickly reuse it.
+
                                              *substitute-nvim-`range.motion1`*
 
 `range.motion1`                        Default : `false`
