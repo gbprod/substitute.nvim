@@ -28,8 +28,16 @@ function range.word(options)
   range.operator(options)
 end
 
-local function create_match()
-  range.state.match = vim.fn.matchadd("SubstituteRange", vim.fn.escape(range.state.subject, "\\"), 2)
+local function get_escaped_subject(c)
+  local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
+  escaped_subject = c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject
+
+  return c.group_substituted_text and string.format("\\(%s\\)", escaped_subject) or escaped_subject
+end
+
+local function create_match(c)
+  range.clear_match()
+  range.state.match = vim.fn.matchadd("SubstituteRange", get_escaped_subject(c), 2)
 
   vim.cmd([[
     augroup SubstituteClearMatch
@@ -64,7 +72,7 @@ function range.operator_callback(vmode)
   local line = vim.api.nvim_buf_get_lines(0, regions[1].start_row - 1, regions[1].end_row, true)
   range.state.subject = string.sub(line[1], regions[1].start_col + 1, regions[1].end_col + 1)
 
-  create_match()
+  create_match(c)
 
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
   vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
@@ -79,13 +87,6 @@ local function get_escaped_replacement(c)
   local replacement = c.register ~= default_reg and vim.fn.getreg(c.register) or ""
 
   return vim.fn.escape(replacement, "/\\"):gsub("\n$", ""):gsub("\n", "\\r") or ""
-end
-
-local function get_escaped_subject(c)
-  local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
-  escaped_subject = c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject
-
-  return c.group_substituted_text and string.format("\\(%s\\)", escaped_subject) or escaped_subject
 end
 
 local function create_replace_command()
