@@ -92,13 +92,16 @@ end
 local function create_replace_command()
   local c = config.get_range(range.state.overrides)
 
+  local left = vim.api.nvim_replace_termcodes("<left>", true, false, true)
+
   return string.format(
-    vim.api.nvim_replace_termcodes(":'[,']%s/%s/%s/g%s<Left><Left>%s", true, false, true),
+    vim.api.nvim_replace_termcodes(":'[,']%s/%s/%s/g%s%s<Left><Left>%s", true, false, true),
     c.prefix,
     get_escaped_subject(c),
     get_escaped_replacement(c),
     c.confirm and "c" or "",
-    c.confirm and vim.api.nvim_replace_termcodes("<left>", true, false, true) or ""
+    c.suffix,
+    string.rep(left, c.confirm and c.suffix:len() + 1 or c.suffix:len(), "")
   )
 end
 

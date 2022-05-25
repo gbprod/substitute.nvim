@@ -228,6 +228,12 @@ Default : `s`
 
 Substitution command that will be used (set it to `S` to use [tpope/vim-abolish](https://github.com/tpope/vim-abolish) substitution by default).
 
+#### `range.suffix`
+
+Default : `""`
+
+Suffix added at the end of the substitute command. For example, it can be used to not save substitution history calls by adding `| call histdel(':', -1)`.
+
 #### `range.prompt_current_text`
 
 Default : `false`
