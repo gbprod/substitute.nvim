@@ -14,6 +14,7 @@ function config.setup(options)
       motion1 = false,
       motion2 = false,
       group_substituted_text = false,
+      suffix = "",
     },
     exchange = {
       motion = nil,
