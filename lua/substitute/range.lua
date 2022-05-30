@@ -6,6 +6,7 @@ local range = {}
 range.state = {
   subject = nil,
   match = nil,
+  augroup = nil,
   overrides = {},
 }
 
@@ -39,13 +40,12 @@ local function create_match(c)
   range.clear_match()
   range.state.match = vim.fn.matchadd("SubstituteRange", get_escaped_subject(c), 2)
 
-  vim.cmd([[
-    augroup SubstituteClearMatch
-      autocmd!
-      autocmd InsertEnter,WinLeave,BufLeave * lua require('substitute.range').clear_match()
-      autocmd CursorMoved * lua require('substitute.range').clear_match()
-    augroup END
-  ]])
+  range.state.augroup = vim.api.nvim_create_augroup("SubstituteClearMatch", { clear = true })
+  vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave", "BufLeave", "CursorMoved" }, {
+    group = range.state.augroup,
+    pattern = "*",
+    callback = range.clear_match,
+  })
 end
 
 function range.clear_match()
@@ -54,11 +54,9 @@ function range.clear_match()
     range.state.match = nil
   end
 
-  vim.cmd([[
-    augroup SubstituteClearMatch
-      autocmd!
-    augroup END
-  ]])
+  if nil ~= range.state.augroup then
+    vim.api.nvim_clear_autocmds({ group = range.state.augroup })
+  end
 end
 
 function range.operator_callback(vmode)
