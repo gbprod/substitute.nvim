@@ -19,7 +19,9 @@ rewritten in `lua` (and I hope this will be more maintainable, readable and effi
 
 ## ⚡️ Requirements
 
-- Neovim >= 0.6.0
+- Neovim >= 0.7.0
+
+([Neovim 0.6.0 compat](https://github.com/gbprod/substitute.nvim/tree/0.6-compat))
 
 ## 📦 Installation
 
@@ -43,7 +45,7 @@ use({
 
 ### [vim-plug](https://github.com/junegunn/vim-plug)
 
-```vim
+```viml
 " Vim Script
 Plug 'gbprod/substitute.nvim'
 lua << EOF
@@ -70,6 +72,7 @@ Substitute comes with the following defaults:
     complete_word = false,
     motion1 = false,
     motion2 = false,
+    suffix = "",
   },
   exchange = {
     motion = false,
@@ -85,20 +88,10 @@ It contains no default mappings and will have no effect until you add your own m
 
 ```lua
 -- Lua
-vim.api.nvim_set_keymap("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
-```
-
-Or
-
-```viml
-" Vim Script
-nnoremap s <cmd>lua require('substitute').operator()<cr>
-nnoremap ss <cmd>lua require('substitute').line()<cr>
-nnoremap S <cmd>lua require('substitute').eol()<cr>
-xnoremap s <cmd>lua require('substitute').visual()<cr>
+vim.keymap.set("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
+vim.keymap.set("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
+vim.keymap.set("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
+vim.keymap.set("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 ```
 
 Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of
@@ -168,15 +161,8 @@ require("substitute").setup({
 With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.api.nvim_set_keymap("x", "p", "<cmd>lua require('substitute').visual()<cr>", {})
-vim.api.nvim_set_keymap("x", "P", "<cmd>lua require('substitute').visual()<cr>", {})
-```
-
-or
-
-```viml
-xmap p <cmd>lua require('substitute').visual()<cr>
-xmap P <cmd>lua require('substitute').visual()<cr>
+vim.keymap.set("x", "p", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+vim.keymap.set("x", "P", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
 ```
 
 </details>
@@ -187,17 +173,9 @@ Another operator provided allows specifying both the text to replace and the lin
 change by using multiple consecutive motions.
 
 ```lua
-vim.api.nvim_set_keymap("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>", {})
-vim.api.nvim_set_keymap("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>", {})
-```
-
-or
-
-```viml
-nmap <leader>s <cmd>lua require('substitute.range').operator()<cr>
-xmap <leader>s <cmd>lua require('substitute.range').visual()<cr>
-nmap <leader>ss <cmd>lua require('substitute.range').word()<cr>
+vim.keymap.set("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
+vim.keymap.set("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>", { noremap = true })
+vim.keymap.set("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>", { noremap = true })
 ```
 
 After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a
@@ -216,8 +194,8 @@ content of `a` register as replacement value.
 You can override any default configuration (described later) by passing this to the operator function. By example,
 this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
-```viml
-nmap <leader>S <cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>
+```lua
+vim.keymap.set("n", "<leader>S", "<cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>", { noremap = true })
 ```
 
 ### ⚙️ Configuration
@@ -321,19 +299,10 @@ You can select a whole line using the `line` function (`sxx` in the example belo
 Because this operator has to be invoked twice to change the document, if you change your mind after invoking the operator once, you can cancel you selection using the `cancel` function (mapped to `sxc` in the example below).
 
 ```lua
-vim.api.nvim_set_keymap("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
-```
-
-or
-
-```viml
-nmap sx <cmd>lua require('substitute.exchange').operator()<cr>
-nmap sxx <cmd>lua require('substitute.exchange').line()<cr>
-xmap X <cmd>lua require('substitute.exchange').visual()<cr>
-nmap sxc <cmd>lua require('substitute.exchange').cancel()<cr>
+vim.keymap.set("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
+vim.keymap.set("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
+vim.keymap.set("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
+vim.keymap.set("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
 ```
 
 ### ⚙️ Configuration
