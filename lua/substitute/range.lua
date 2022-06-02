@@ -87,7 +87,7 @@ local function get_escaped_replacement(c)
   return vim.fn.escape(replacement, "/\\"):gsub("\n$", ""):gsub("\n", "\\r") or ""
 end
 
-local function create_replace_command()
+function range.create_replace_command()
   local c = config.get_range(range.state.overrides)
 
   local left = vim.api.nvim_replace_termcodes("<left>", true, false, true)
@@ -106,7 +106,7 @@ end
 function range.selection_operator_callback()
   range.clear_match()
 
-  vim.api.nvim_feedkeys(create_replace_command(), "tm", true)
+  vim.api.nvim_feedkeys(range.create_replace_command(), "mi", true)
 end
 
 return range

@@ -3,7 +3,7 @@ local range = require("substitute.range")
 
 local function execute_keys(feedkeys)
   local keys = vim.api.nvim_replace_termcodes(feedkeys, true, false, true)
-  vim.api.nvim_feedkeys(keys, "x", false)
+  vim.api.nvim_feedkeys(keys, "tm", false)
 end
 
 describe("Substitute range", function()
@@ -31,14 +31,12 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
+    local cmd = range.create_replace_command()
 
-    assert.are.equal("'[,']s/Lorem//g", vim.fn.getreg(":"))
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']s/Lorem//g<Left><Left>", true, false, true), cmd)
   end)
 
-  it("should use abolish", function()
-    -- from global config
+  it("should use abolish from global setup", function()
     substitute.setup({
       range = {
         prefix = "S",
@@ -53,12 +51,11 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']S/Lorem//g<Left><Left>", true, false, true), cmd)
+  end)
 
-    assert.are.equal("'[,']S/Lorem//g", vim.fn.getreg(":"))
-
-    -- from override
+  it("should use abolish from override", function()
     substitute.setup()
 
     range.operator({ prefix = "S" })
@@ -69,14 +66,11 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
-
-    assert.are.equal("'[,']S/Lorem//g", vim.fn.getreg(":"))
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']S/Lorem//g<Left><Left>", true, false, true), cmd)
   end)
 
   it("should prompt current text", function()
-    -- from global config
     substitute.setup({
       range = {
         prompt_current_text = true,
@@ -91,12 +85,11 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']s/Lorem/Lorem/g<Left><Left>", true, false, true), cmd)
+  end)
 
-    assert.are.equal("'[,']s/Lorem/Lorem/g", vim.fn.getreg(":"))
-
-    -- from override
+  it("should prompt current text using override", function()
     substitute.setup()
 
     range.operator({ prompt_current_text = true })
@@ -110,11 +103,11 @@ describe("Substitute range", function()
     range.selection_operator_callback()
     execute_keys("<cr>")
 
-    assert.are.equal("'[,']s/Lorem/Lorem/g", vim.fn.getreg(":"))
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']s/Lorem/Lorem/g<Left><Left>", true, false, true), cmd)
   end)
 
   it("should ask for confirmation", function()
-    -- from global config
     substitute.setup({
       range = {
         confirm = true,
@@ -129,12 +122,11 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']s/Lorem//gc<Left><Left><Left>", true, false, true), cmd)
+  end)
 
-    assert.are.equal("'[,']s/Lorem//gc", vim.fn.getreg(":"))
-
-    -- from override
+  it("should ask for confirmation using override", function()
     substitute.setup()
 
     range.operator({ confirm = true })
@@ -145,9 +137,7 @@ describe("Substitute range", function()
     vim.api.nvim_buf_set_mark(0, "[", 1, 0, {})
     vim.api.nvim_buf_set_mark(0, "]", 5, 3, {})
 
-    range.selection_operator_callback()
-    execute_keys("<cr>")
-
-    assert.are.equal("'[,']s/Lorem//gc", vim.fn.getreg(":"))
+    local cmd = range.create_replace_command()
+    assert.are.equal(vim.api.nvim_replace_termcodes(":'[,']s/Lorem//gc<Left><Left><Left>", true, false, true), cmd)
   end)
 end)
