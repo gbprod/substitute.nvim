@@ -1,7 +1,7 @@
 local utils = {}
 
 function utils.get_regions(vmode)
-  if vmode == vim.api.nvim_replace_termcodes("<c-v>", true, false, true) then
+  if utils.is_blockwise(vmode) then
     local start = vim.api.nvim_buf_get_mark(0, "<")
     local finish = vim.api.nvim_buf_get_mark(0, ">")
 
@@ -22,7 +22,7 @@ function utils.get_regions(vmode)
   end
 
   local start_mark, end_mark = "[", "]"
-  if vmode:match("[vV]") then
+  if utils.is_visual(vmode) then
     start_mark, end_mark = "<", ">"
   end
 
@@ -38,6 +38,111 @@ function utils.get_regions(vmode)
       end_col = (end_row_len >= finish[2] and vmode ~= "line") and finish[2] or end_row_len,
     },
   }
+end
+
+function utils.get_marks(bufnr, vmode)
+  local start_mark, finish_mark = "[", "]"
+  if utils.is_visual(vmode) then
+    start_mark, finish_mark = "<", ">"
+  end
+
+  local pos_start = vim.api.nvim_buf_get_mark(bufnr, start_mark)
+  local pos_finish = vim.api.nvim_buf_get_mark(bufnr, finish_mark)
+
+  return {
+    start = {
+      row = pos_start[1],
+      col = pos_start[2],
+    },
+    finish = {
+      row = pos_finish[1],
+      col = pos_finish[2],
+    },
+  }
+end
+
+function utils.substitute_text(bufnr, start, finish, vmode, replacement, regtype)
+  if "line" == vmode or "V" == vmode then
+    vim.api.nvim_buf_set_lines(bufnr, start.row - 1, finish.row, false, replacement)
+
+    return
+  end
+
+  if utils.is_blockwise(vmode) then
+    if utils.is_blockwise(regtype) then
+      for row = start.row, finish.row, 1 do
+        local current_row_len = vim.fn.getline(row):len()
+        if current_row_len > 0 then
+          vim.api.nvim_buf_set_text(
+            bufnr,
+            row - 1,
+            start.col,
+            row - 1,
+            current_row_len > finish.col and finish.col + 1 or current_row_len,
+            { table.remove(replacement, 1) or "" }
+          )
+        end
+      end
+
+      return
+    end
+
+    for row = finish.row, start.row, -1 do
+      local current_row_len = vim.fn.getline(row):len()
+      if current_row_len > 0 then
+        vim.api.nvim_buf_set_text(
+          bufnr,
+          row - 1,
+          start.col,
+          row - 1,
+          current_row_len > finish.col and finish.col + 1 or current_row_len,
+          replacement
+        )
+      end
+    end
+
+    return
+  end
+
+  local current_row_len = vim.fn.getline(finish.row):len()
+  vim.api.nvim_buf_set_text(
+    bufnr,
+    start.row - 1,
+    start.col,
+    finish.row - 1,
+    current_row_len > finish.col and finish.col + 1 or current_row_len,
+    replacement
+  )
+end
+
+function utils.text(bufnr, start, finish, vmode)
+  if "line" == vmode or "V" == vmode then
+    return vim.api.nvim_buf_get_lines(bufnr, start.row - 1, finish.row, false)
+  end
+
+  if utils.is_blockwise(vmode) then
+    local text = {}
+    for row = start.row, finish.row, 1 do
+      local current_row_len = vim.fn.getline(row):len()
+
+      local lines = vim.api.nvim_buf_get_text(
+        bufnr,
+        row - 1,
+        start.col,
+        row - 1,
+        current_row_len > finish.col and finish.col + 1 or current_row_len,
+        {}
+      )
+
+      for _, line in pairs(lines) do
+        table.insert(text, line)
+      end
+    end
+
+    return text
+  end
+
+  return vim.api.nvim_buf_get_text(0, start.row - 1, start.col, finish.row - 1, finish.col + 1, {})
 end
 
 function utils.get_text(regions)
@@ -70,7 +175,7 @@ function utils.get_default_register()
 end
 
 function utils.get_register_type(vmode)
-  if vmode == vim.api.nvim_replace_termcodes("<c-v>", true, false, true) then
+  if utils.is_blockwise(vmode) then
     return "b"
   end
 
@@ -79,6 +184,14 @@ function utils.get_register_type(vmode)
   end
 
   return "c"
+end
+
+function utils.is_visual(vmode)
+  return vmode:match("[vV]") or utils.is_blockwise(vmode)
+end
+
+function utils.is_blockwise(vmode)
+  return vmode:byte() == 22
 end
 
 -- Returns
@@ -172,4 +285,5 @@ function utils.highlight_regions(regions, hl_group, ns_id)
     end
   end
 end
+
 return utils
