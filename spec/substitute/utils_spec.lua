@@ -406,3 +406,9 @@ describe("Compare regions", function()
     assert.are.equal("=", cmp)
   end)
 end)
+
+describe("Substitute text", function()
+  before_each(create_test_buffer)
+
+  it("should substitute lines", function() end)
+end)

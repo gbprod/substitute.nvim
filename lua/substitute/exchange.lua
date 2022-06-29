@@ -83,7 +83,7 @@ function exchange.line(options)
 end
 
 function exchange.operator_callback(vmode)
-  if vmode == vim.api.nvim_replace_termcodes("<c-v>", true, false, true) then
+  if utils.is_blockwise(vmode) then
     vim.notify("Exchange doesn't works with blockwise selections (for the moment)", vim.log.levels.INFO, {})
     return
   end

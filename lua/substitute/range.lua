@@ -60,15 +60,16 @@ function range.clear_match()
 end
 
 function range.operator_callback(vmode)
-  local regions = utils.get_regions(vmode)
-  if vim.tbl_count(regions) ~= 1 or regions[1].start_row ~= regions[1].end_row then
+  local marks = utils.get_marks(0, vmode)
+  local text = utils.text(0, marks.start, marks.finish, vmode)
+  if vim.tbl_count(text) ~= 1 then
     vim.notify("Multiline is not supported by SubstituteRange", vim.log.levels.INFO)
     return
   end
+
   local c = config.get_range(range.state.overrides)
 
-  local line = vim.api.nvim_buf_get_lines(0, regions[1].start_row - 1, regions[1].end_row, true)
-  range.state.subject = string.sub(line[1], regions[1].start_col + 1, regions[1].end_col + 1)
+  range.state.subject = table.remove(text)
 
   create_match(c)
 

@@ -22,35 +22,29 @@ function substitute.operator(options)
   vim.api.nvim_feedkeys("g@" .. (options.motion or ""), "i", false)
 end
 
-local function do_substitution(regions, register, count, vmode)
-  local replacement = vim.fn.getreg(register)
+function substitute.operator_callback(vmode)
+  local marks = utils.get_marks(0, vmode)
+
+  local substitued_text = utils.text(0, marks.start, marks.finish, vmode)
+
+  local regcontents = vim.fn.getreg(substitute.state.register)
+  local regtype = vim.fn.getregtype(substitute.state.register)
+  local replacement = vim.split(regcontents:rep(substitute.state.count):gsub("\n$", ""), "\n")
+
+  utils.substitute_text(0, marks.start, marks.finish, vmode, replacement, regtype)
 
   if config.options.yank_substituted_text then
-    vim.fn.setreg(
-      utils.get_default_register(),
-      table.concat(utils.get_text(regions), "\n"),
-      utils.get_register_type(vmode)
-    )
-  end
-
-  local text = vim.split(replacement:rep(count):gsub("\n$", ""), "\n")
-  for _, region in ipairs(regions) do
-    vim.api.nvim_buf_set_text(0, region.start_row - 1, region.start_col, region.end_row - 1, region.end_col + 1, text)
+    vim.fn.setreg(utils.get_default_register(), table.concat(substitued_text, "\n"), utils.get_register_type(vmode))
   end
 
   if config.options.on_substitute ~= nil then
     config.options.on_substitute({
-      regions = regions,
-      register = register,
-      count = count,
+      marks = marks,
+      register = substitute.state.register,
+      count = substitute.state.count,
       vmode = vmode,
     })
   end
-end
-
-function substitute.operator_callback(vmode)
-  local regions = utils.get_regions(vmode)
-  do_substitution(regions, substitute.state.register, substitute.state.count, vmode)
 end
 
 function substitute.line(options)
