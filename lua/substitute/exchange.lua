@@ -6,10 +6,22 @@ local exchange = {}
 local hl_namespace = vim.api.nvim_create_namespace("substitute.exchange")
 
 local prepare_exchange = function(vmode)
-  local regions = utils.get_regions(vmode)
-  utils.highlight_regions(regions, "SubstituteExchange", hl_namespace)
+  local marks = utils.get_marks(0, vmode)
+  local regtype = utils.get_register_type(vmode)
 
-  vim.b.exchange_origin = regions
+  vim.highlight.range(
+    0,
+    hl_namespace,
+    "SubstituteExchange",
+    { marks.start.row - 1, regtype ~= "l" and marks.start.col or 0 },
+    { marks.finish.row - 1, regtype ~= "l" and marks.finish.col + 1 or -1 },
+    { regtype = vmode, inclusive = false }
+  )
+
+  vim.b.exchange_origin = {
+    marks = marks,
+    regtype = regtype,
+  }
 
   vim.api.nvim_buf_attach(0, false, {
     on_lines = function()
@@ -20,10 +32,14 @@ local prepare_exchange = function(vmode)
 end
 
 local function do_exchange(vmode)
-  local origin_regions = vim.b.exchange_origin
-  local target_regions = utils.get_regions(vmode)
+  local origin = vim.b.exchange_origin
+  local regtype = utils.get_register_type(vmode)
+  local target = {
+    marks = utils.get_marks(0, regtype),
+    regtype = regtype,
+  }
 
-  local cmp = utils.compare_regions(origin_regions, target_regions)
+  local cmp = utils.compare_regions(origin, target)
 
   if cmp == "=" then
     vim.notify("Overlapping regions, cannot apply exchange.", vim.log.levels.INFO, {})
@@ -31,35 +47,17 @@ local function do_exchange(vmode)
   end
 
   if cmp == ">" or cmp == "]" then
-    origin_regions, target_regions = target_regions, origin_regions
+    origin, target = target, origin
   end
 
-  local origin_text = utils.get_text(origin_regions)
-  local target_text = utils.get_text(target_regions)
+  local origin_text = utils.text(0, origin.marks.start, origin.marks.finish, origin.regtype)
+  local target_text = utils.text(0, target.marks.start, target.marks.finish, target.regtype)
 
   if cmp == "<" or cmp == ">" then
-    for _, region in ipairs(target_regions) do
-      vim.api.nvim_buf_set_text(
-        0,
-        region.start_row - 1,
-        region.start_col,
-        region.end_row - 1,
-        region.end_col + 1,
-        origin_text
-      )
-    end
+    utils.substitute_text(0, target.marks.start, target.marks.finish, target.regtype, origin_text, origin.regtype)
   end
 
-  for _, region in ipairs(origin_regions) do
-    vim.api.nvim_buf_set_text(
-      0,
-      region.start_row - 1,
-      region.start_col,
-      region.end_row - 1,
-      region.end_col + 1,
-      target_text
-    )
-  end
+  utils.substitute_text(0, origin.marks.start, origin.marks.finish, origin.regtype, target_text, target.regtype)
 
   exchange.cancel()
 end
