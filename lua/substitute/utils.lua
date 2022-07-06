@@ -21,15 +21,17 @@ function utils.get_marks(bufnr, vmode)
   }
 end
 
-function utils.substitute_text(bufnr, start, finish, vmode, replacement, regtype)
-  if "line" == vmode or "V" == vmode then
+function utils.substitute_text(bufnr, start, finish, regtype, replacement, replacement_regtype)
+  regtype = utils.get_register_type(regtype)
+
+  if "l" == regtype then
     vim.api.nvim_buf_set_lines(bufnr, start.row - 1, finish.row, false, replacement)
 
     return
   end
 
-  if utils.is_blockwise(vmode) then
-    if utils.is_blockwise(regtype) then
+  if utils.is_blockwise(regtype) then
+    if utils.is_blockwise(replacement_regtype) then
       for row = start.row, finish.row, 1 do
         local current_row_len = vim.fn.getline(row):len()
         if current_row_len > 0 then
@@ -137,7 +139,7 @@ function utils.is_visual(vmode)
 end
 
 function utils.is_blockwise(vmode)
-  return vmode:byte() == 22 or vmode == "block"
+  return vmode:byte() == 22 or vmode == "block" or vmode == "b"
 end
 
 -- Returns

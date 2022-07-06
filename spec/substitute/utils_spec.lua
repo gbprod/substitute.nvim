@@ -418,5 +418,81 @@ end)
 describe("Substitute text", function()
   before_each(create_test_buffer)
 
-  it("should substitute lines", function() end)
+  it("should substitute lines", function()
+    utils.substitute_text(0, { row = 2, col = 5 }, { row = 3, col = 6 }, "l", { "Test" }, "c")
+
+    local result = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
+
+    assert.are.same({
+      "Lorem ipsum dolor sit amet,",
+      "Test",
+      "",
+      "Arcu dui vivamus arcu felis bibendum ut tristique et.",
+      "Amet purus gravida quis blandit turpis cursus in.",
+      "Auctor eu augue ut lectus arcu bibendum at.",
+    }, result)
+  end)
+
+  it("should substitute chars", function()
+    utils.substitute_text(0, { row = 2, col = 5 }, { row = 3, col = 6 }, "c", { "Test" }, "c")
+
+    local result = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
+
+    assert.are.same({
+      "Lorem ipsum dolor sit amet,",
+      "conseTestalesuada lacus at ornare accumsan.",
+      "",
+      "Arcu dui vivamus arcu felis bibendum ut tristique et.",
+      "Amet purus gravida quis blandit turpis cursus in.",
+      "Auctor eu augue ut lectus arcu bibendum at.",
+    }, result)
+  end)
+
+  it("should substitute block", function()
+    utils.substitute_text(0, { row = 2, col = 5 }, { row = 3, col = 6 }, "b", { "Test" }, "c")
+
+    local result = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
+
+    assert.are.same({
+      "Lorem ipsum dolor sit amet,",
+      "conseTestetur adipiscing elit.",
+      "NullaTestalesuada lacus at ornare accumsan.",
+      "",
+      "Arcu dui vivamus arcu felis bibendum ut tristique et.",
+      "Amet purus gravida quis blandit turpis cursus in.",
+      "Auctor eu augue ut lectus arcu bibendum at.",
+    }, result)
+  end)
+
+  it("should substitute block with block", function()
+    utils.substitute_text(0, { row = 2, col = 5 }, { row = 3, col = 6 }, "b", { "Test" }, "b")
+
+    local result = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
+
+    assert.are.same({
+      "Lorem ipsum dolor sit amet,",
+      "conseTestetur adipiscing elit.",
+      "Nullaalesuada lacus at ornare accumsan.",
+      "",
+      "Arcu dui vivamus arcu felis bibendum ut tristique et.",
+      "Amet purus gravida quis blandit turpis cursus in.",
+      "Auctor eu augue ut lectus arcu bibendum at.",
+    }, result)
+  end)
+
+  it("should substitute block with block", function()
+    utils.substitute_text(0, { row = 2, col = 5 }, { row = 3, col = 6 }, "b", { "Test", "TTTT", "RRRR" }, "b")
+
+    local result = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
+
+    assert.are.same({
+      "Lorem ipsum dolor sit amet,",
+      "conseTestetur adipiscing elit.",
+      "NullaTTTTalesuada lacus at ornare accumsan.",
+      "",
+      "Arcu dui vivamus arcu felis bibendum ut tristique et.",
+      "Amet purus gravida quis blandit turpis cursus in.",
+      "Auctor eu augue ut lectus arcu bibendum at.",
+    }, result)
+  end)
 end)
