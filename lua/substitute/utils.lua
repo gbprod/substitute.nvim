@@ -165,13 +165,13 @@ function utils.compare_regions(origin, target)
   end
 
   local origin_offset = {
-    start = vim.api.nvim_buf_get_offset(0, origin.marks.start.row) + origin.marks.start.col,
-    finish = vim.api.nvim_buf_get_offset(0, origin.marks.finish.row) + origin.marks.finish.col,
+    start = vim.api.nvim_buf_get_offset(0, origin.marks.start.row - 1) + origin.marks.start.col,
+    finish = vim.api.nvim_buf_get_offset(0, origin.marks.finish.row - 1) + origin.marks.finish.col,
   }
 
   local target_offset = {
-    start = vim.api.nvim_buf_get_offset(0, target.marks.start.row) + target.marks.start.col,
-    finish = vim.api.nvim_buf_get_offset(0, target.marks.finish.row) + target.marks.finish.col,
+    start = vim.api.nvim_buf_get_offset(0, target.marks.start.row - 1) + target.marks.start.col,
+    finish = vim.api.nvim_buf_get_offset(0, target.marks.finish.row - 1) + target.marks.finish.col,
   }
 
   --  < if origin comes before target
