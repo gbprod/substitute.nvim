@@ -45,11 +45,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -57,11 +57,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 2,
+          row = 3,
           col = 0,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -73,11 +73,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -85,11 +85,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 1,
+          row = 2,
           col = 6,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -101,11 +101,11 @@ describe("Compare regions", function()
       regtype = "l",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -113,11 +113,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 2,
+          row = 3,
           col = 6,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -131,11 +131,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 2,
+          row = 3,
           col = 0,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -143,11 +143,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -159,11 +159,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 1,
+          row = 2,
           col = 6,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -171,11 +171,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -187,11 +187,11 @@ describe("Compare regions", function()
       regtype = "l",
       marks = {
         start = {
-          row = 2,
+          row = 3,
           col = 6,
         },
         finish = {
-          row = 3,
+          row = 5,
           col = 5,
         },
       },
@@ -199,11 +199,11 @@ describe("Compare regions", function()
       regtype = "l",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
-          row = 1,
+          row = 2,
           col = 5,
         },
       },
@@ -217,7 +217,7 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
@@ -245,11 +245,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 6,
         },
         finish = {
-          row = 2,
+          row = 3,
           col = 4,
         },
       },
@@ -257,11 +257,11 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 7,
         },
         finish = {
-          row = 2,
+          row = 3,
           col = 3,
         },
       },
@@ -287,7 +287,7 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 0,
         },
         finish = {
@@ -303,7 +303,7 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 7,
         },
         finish = {
@@ -315,7 +315,7 @@ describe("Compare regions", function()
       regtype = "c",
       marks = {
         start = {
-          row = 0,
+          row = 1,
           col = 7,
         },
         finish = {
@@ -349,7 +349,7 @@ describe("Compare regions", function()
           col = 0,
         },
         finish = {
-          row = 4,
+          row = 5,
           col = 5,
         },
       },
