@@ -10,8 +10,8 @@ substitute.state = {
 function substitute.setup(options)
   substitute.config = config.setup(options)
 
-  vim.highlight.link("SubstituteRange", "Search")
-  vim.highlight.link("SubstituteExchange", "Search")
+  vim.api.nvim_set_hl(0, "SubstituteRange", { link = "Search" })
+  vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "Search" })
 end
 
 function substitute.operator(options)
