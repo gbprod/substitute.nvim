@@ -23,6 +23,11 @@ local prepare_exchange = function(vmode)
     regtype = regtype,
   }
 
+  if config.options.exchange.use_esc_to_cancel then
+    vim.b.exchange_esc_previous_mapping = vim.fn.maparg("<Esc>", "n")
+    vim.keymap.set("n", "<Esc>", exchange.cancel)
+  end
+
   vim.api.nvim_buf_attach(0, false, {
     on_lines = function()
       exchange.cancel()
@@ -58,8 +63,6 @@ local function do_exchange(vmode)
   end
 
   utils.substitute_text(0, origin.marks.start, origin.marks.finish, origin.regtype, target_text, target.regtype)
-
-  exchange.cancel()
 end
 
 function exchange.operator(options)
@@ -96,6 +99,11 @@ end
 function exchange.cancel()
   vim.api.nvim_buf_clear_namespace(0, hl_namespace, 0, -1)
   vim.b.exchange_origin = nil
+
+  if config.options.exchange.use_esc_to_cancel then
+    vim.keymap.set("n", "<Esc>", vim.b.exchange_esc_previous_mapping or "<Nop>")
+    vim.b.exchange_esc_previous_mapping = nil
+  end
 end
 
 return exchange

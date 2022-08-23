@@ -18,6 +18,7 @@ function config.setup(options)
     },
     exchange = {
       motion = nil,
+      use_esc_to_cancel = true,
     },
   }
 

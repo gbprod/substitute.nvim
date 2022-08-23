@@ -76,6 +76,7 @@ Substitute comes with the following defaults:
   },
   exchange = {
     motion = false,
+    use_esc_to_cancel = true,
   },
 }
 ```
@@ -288,15 +289,17 @@ require("substitute").setup({
 
 This operator allows to quickly exchange text inside a buffer.
 
-Eg. To exchange two words, place your cursor on the first word and type `sxiw`. Then move to the second word and type
-`sxiw` again.
+Eg. To exchange two words, place your cursor on the first word and type `sxiw`.
+Then move to the second word and type `sxiw` again.
 
 Note: the {motion} used in the first and second use of `sx` don't have to be the same.
 Note 2: this is dot-repeatable, so you can use `.` instead of `sxiw` for the second word.
 
 You can select a whole line using the `line` function (`sxx` in the example below).
 
-Because this operator has to be invoked twice to change the document, if you change your mind after invoking the operator once, you can cancel you selection using the `cancel` function (mapped to `sxc` in the example below).
+Because this operator has to be invoked twice to change the document, if you
+change your mind after invoking the operator once, you can cancel you selection
+using `<Esc>` key or the `cancel` function (mapped to `sxc` in the example below).
 
 ```lua
 vim.keymap.set("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
@@ -315,6 +318,17 @@ This will use this motion for exchange.
 
 eg. `lua require('substitute.exchange').operator({ motion = 'ap' })` will select
 around paragraph as range of exchange.
+
+#### `exchange.use_esc_to_cancel`
+
+Default : `true`
+
+If `true`, you can use the `<Esc>` key to cancel exchange selection. If set to
+false, consider map the cancel function:
+
+```lua
+vim.keymap.set("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
+```
 
 ## 🎨 Colors
 
