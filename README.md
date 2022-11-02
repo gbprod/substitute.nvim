@@ -19,7 +19,7 @@ rewritten in `lua` (and I hope this will be more maintainable, readable and effi
 
 ## ⚡️ Requirements
 
-- Neovim >= 0.7.0
+- Neovim >= 0.8.0
 
 ([Neovim 0.6.0 compat](https://github.com/gbprod/substitute.nvim/tree/0.6-compat))
 

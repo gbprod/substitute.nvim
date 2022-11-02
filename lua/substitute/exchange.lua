@@ -24,7 +24,7 @@ local prepare_exchange = function(vmode)
   }
 
   if config.options.exchange.use_esc_to_cancel then
-    vim.b.exchange_esc_previous_mapping = vim.fn.maparg("<Esc>", "n")
+    vim.b.exchange_esc_previous_mapping = vim.fn.maparg("<Esc>", "n", false, true)
     vim.keymap.set("n", "<Esc>", exchange.cancel)
   end
 
@@ -100,8 +100,12 @@ function exchange.cancel()
   vim.api.nvim_buf_clear_namespace(0, hl_namespace, 0, -1)
   vim.b.exchange_origin = nil
 
-  if config.options.exchange.use_esc_to_cancel then
-    vim.keymap.set("n", "<Esc>", vim.b.exchange_esc_previous_mapping or "<Nop>")
+  if config.options.exchange.use_esc_to_cancel and nil ~= vim.b.exchange_esc_previous_mapping then
+    if vim.tbl_isempty(vim.b.exchange_esc_previous_mapping) then
+      vim.keymap.set("n", "<Esc>", "<Nop>")
+    else
+      vim.fn.mapset("n", false, vim.b.exchange_esc_previous_mapping)
+    end
     vim.b.exchange_esc_previous_mapping = nil
   end
 end
