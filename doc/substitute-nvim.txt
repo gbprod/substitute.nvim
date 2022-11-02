@@ -46,7 +46,7 @@ See this plugin in action <DEMO.md>
 ⚡️ REQUIREMENTS                      *substitute-nvim-⚡️-requirements*
 
 
-- Neovim >= 0.7.0
+- Neovim >= 0.8.0
 
 
 (Neovim 0.6.0 compat
