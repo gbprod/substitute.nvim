@@ -27,13 +27,21 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
   if "l" == regtype then
     vim.api.nvim_buf_set_lines(bufnr, start.row - 1, finish.row, false, replacement)
 
-    return
+    local end_mark_col = string.len(replacement[#replacement]) + 1
+    local end_mark_row = start.row + vim.tbl_count(replacement) - 1
+
+    return { { start = { row = start.row, col = 0 }, finish = { row = end_mark_row, col = end_mark_col } } }
   end
 
   if utils.is_blockwise(regtype) then
     if utils.is_blockwise(replacement_regtype) then
+      local marks = {}
       for row = start.row, finish.row, 1 do
+        if start.col > finish.col then
+          start.col, finish.col = finish.col, start.col
+        end
         local current_row_len = vim.fn.getline(row):len()
+        local last_replacement = table.remove(replacement, 1) or ""
         if current_row_len > 0 then
           vim.api.nvim_buf_set_text(
             bufnr,
@@ -41,29 +49,48 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
             start.col,
             row - 1,
             current_row_len > finish.col and finish.col + 1 or current_row_len,
-            { table.remove(replacement, 1) or "" }
+            { last_replacement }
           )
+
+          table.insert(marks, {
+            start = { row = row, col = start.col },
+            finish = { row = row, col = start.col + string.len(last_replacement) },
+          })
         end
       end
 
-      return
+      return marks
     end
 
+    local marks = {}
     for row = finish.row, start.row, -1 do
       local current_row_len = vim.fn.getline(row):len()
+      if start.col > finish.col then
+        start.col, finish.col = finish.col, start.col
+      end
+
       if current_row_len > 0 then
         vim.api.nvim_buf_set_text(
           bufnr,
           row - 1,
-          start.col,
+          current_row_len > start.col and start.col or current_row_len,
           row - 1,
           current_row_len > finish.col and finish.col + 1 or current_row_len,
           replacement
         )
+
+        local end_mark_col = string.len(replacement[#replacement])
+        if vim.tbl_count(replacement) == 1 then
+          end_mark_col = end_mark_col + start.col
+        end
+        table.insert(marks, 1, {
+          start = { row = row, col = start.col },
+          finish = { row = row, col = end_mark_col },
+        })
       end
     end
 
-    return
+    return marks
   end
 
   local current_row_len = vim.fn.getline(finish.row):len()
@@ -75,6 +102,14 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
     current_row_len > finish.col and finish.col + 1 or current_row_len,
     replacement
   )
+
+  local end_mark_col = string.len(replacement[#replacement])
+  if vim.tbl_count(replacement) == 1 then
+    end_mark_col = end_mark_col + start.col
+  end
+  local end_mark_row = start.row + vim.tbl_count(replacement) - 1
+
+  return { { start = start, finish = { row = end_mark_row, col = end_mark_col } } }
 end
 
 function utils.text(bufnr, start, finish, vmode)
@@ -88,14 +123,12 @@ function utils.text(bufnr, start, finish, vmode)
     for row = start.row, finish.row, 1 do
       local current_row_len = vim.fn.getline(row):len()
 
-      local lines = vim.api.nvim_buf_get_text(
-        bufnr,
-        row - 1,
-        start.col,
-        row - 1,
-        current_row_len > finish.col and finish.col + 1 or current_row_len,
-        {}
-      )
+      local end_col = current_row_len > finish.col and finish.col + 1 or current_row_len
+      if start.col > end_col then
+        end_col = start.col
+      end
+
+      local lines = vim.api.nvim_buf_get_text(bufnr, row - 1, start.col, row - 1, end_col, {})
 
       for _, line in pairs(lines) do
         table.insert(text, line)

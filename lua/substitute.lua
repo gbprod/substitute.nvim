@@ -8,8 +8,14 @@ substitute.state = {
 }
 
 function substitute.setup(options)
-  substitute.config = config.setup(options)
+  config.setup(options)
 
+  if config.options.highlight_substituted_text.enabled then
+    substitute.hl_substitute = vim.api.nvim_create_namespace("yanky.substitute")
+    substitute.timer = vim.loop.new_timer()
+  end
+
+  vim.api.nvim_set_hl(0, "SubstituteSubstituted", { link = "Search", default = true })
   vim.api.nvim_set_hl(0, "SubstituteRange", { link = "Search", default = true })
   vim.api.nvim_set_hl(0, "SubstituteExchange", { link = "Search", default = true })
 end
@@ -31,7 +37,14 @@ function substitute.operator_callback(vmode)
   local regtype = vim.fn.getregtype(substitute.state.register)
   local replacement = vim.split(regcontents:rep(substitute.state.count):gsub("\n$", ""), "\n")
 
-  utils.substitute_text(0, marks.start, marks.finish, vmode, replacement, regtype)
+  local subs_marks = utils.substitute_text(0, marks.start, marks.finish, vmode, replacement, regtype)
+
+  vim.api.nvim_buf_set_mark(0, "[", subs_marks[1].start.row, subs_marks[1].start.col, {})
+  vim.api.nvim_buf_set_mark(0, "]", subs_marks[#subs_marks].finish.row, subs_marks[#subs_marks].finish.col - 1, {})
+
+  if config.options.highlight_substituted_text.enabled then
+    substitute.highlight_substituted_text(subs_marks)
+  end
 
   if config.options.yank_substituted_text then
     vim.fn.setreg(utils.get_default_register(), table.concat(substitued_text, "\n"), utils.get_register_type(vmode))
@@ -72,6 +85,30 @@ function substitute.visual(options)
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
   vim.api.nvim_feedkeys("g@`<", "ni", false)
+end
+
+function substitute.highlight_substituted_text(marks)
+  substitute.timer:stop()
+  vim.api.nvim_buf_clear_namespace(0, substitute.hl_substitute, 0, -1)
+
+  for _, mark in pairs(marks) do
+    vim.highlight.range(
+      0,
+      substitute.hl_substitute,
+      "SubstituteSubstituted",
+      { mark.start.row - 1, mark.start.col },
+      { mark.finish.row - 1, mark.finish.col },
+      { inclusive = false }
+    )
+  end
+
+  substitute.timer:start(
+    config.options.highlight_substituted_text.timer,
+    0,
+    vim.schedule_wrap(function()
+      vim.api.nvim_buf_clear_namespace(0, substitute.hl_substitute, 0, -1)
+    end)
+  )
 end
 
 return substitute
