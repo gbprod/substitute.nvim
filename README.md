@@ -137,9 +137,7 @@ To enable [gbprod/yanky.nvim](https://github.com/gbprod/yanky.nvim) swap when pe
 
 ```lua
 require("substitute").setup({
-  on_substitute = function(event)
-    require("yanky").init_ring("p", event.register, event.count, event.vmode:match("[vV]"))
-  end,
+  on_substitute = require("yanky.integration").substitute(),
 })
 ```
 
