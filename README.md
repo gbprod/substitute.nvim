@@ -65,6 +65,10 @@ Substitute comes with the following defaults:
 {
   on_substitute = nil,
   yank_substituted_text = false,
+  highlight_substituted_text = {
+    enabled = true,
+    timer = 500,
+  },
   range = {
     prefix = "s",
     prompt_current_text = false,
@@ -89,10 +93,10 @@ It contains no default mappings and will have no effect until you add your own m
 
 ```lua
 -- Lua
-vim.keymap.set("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-vim.keymap.set("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-vim.keymap.set("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-vim.keymap.set("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+vim.keymap.set("n", "s", require('substitute').operator, { noremap = true })
+vim.keymap.set("n", "ss", require('substitute').line, { noremap = true })
+vim.keymap.set("n", "S", require('substitute').eol, { noremap = true })
+vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
 ```
 
 Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of
@@ -128,6 +132,18 @@ Default : `false`
 
 If `true`, when performing a substitution, substitued text is pushed into the default register.
 
+### `highlight_substituted_text.enabled`
+
+Default : `true`
+
+If `true` will temporary highlight substitued text.
+
+### `highlight_substituted_text.timer`
+
+Default : `500`
+
+Define the duration of highlight.
+
 ### 🤝 Integration
 
 <details>
@@ -160,8 +176,8 @@ require("substitute").setup({
 With this plugin, you can add thoss mappings to enable it :
 
 ```lua
-vim.keymap.set("x", "p", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
-vim.keymap.set("x", "P", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+vim.keymap.set("x", "p", require('substitute').visual, { noremap = true })
+vim.keymap.set("x", "P", require('substitute').visual, { noremap = true })
 ```
 
 </details>
@@ -172,9 +188,9 @@ Another operator provided allows specifying both the text to replace and the lin
 change by using multiple consecutive motions.
 
 ```lua
-vim.keymap.set("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
-vim.keymap.set("x", "<leader>s", "<cmd>lua require('substitute.range').visual()<cr>", { noremap = true })
-vim.keymap.set("n", "<leader>ss", "<cmd>lua require('substitute.range').word()<cr>", { noremap = true })
+vim.keymap.set("n", "<leader>s", require('substitute.range').operator, { noremap = true })
+vim.keymap.set("x", "<leader>s", require('substitute.range').visual, { noremap = true })
+vim.keymap.set("n", "<leader>ss", require('substitute.range').word, { noremap = true })
 ```
 
 After adding this map, if you execute `<leader>s<motion1><motion2>` then the command line will be filled with a
@@ -194,7 +210,9 @@ You can override any default configuration (described later) by passing this to 
 this will use `S` as prefix of the substitution command (and use [tpope/vim-abolish](https://github.com/tpope/vim-abolish)):
 
 ```lua
-vim.keymap.set("n", "<leader>S", "<cmd>lua require('substitute.range').operator({ prefix = 'S' })<cr>", { noremap = true })
+vim.keymap.set("n", "<leader>S", function ()
+    require('substitute.range').operator({ prefix = 'S' })
+end, { noremap = true })
 ```
 
 ### ⚙️ Configuration
@@ -233,7 +251,7 @@ Will require that there be word boundaries on each match (eg: `\<word\>` instead
 
 Default : `false`
 
-This will capture substitued text as you can use `\1` to quickly reuse it.
+This will capture substituted text as you can use `\1` to quickly reuse it.
 
 #### `range.motion1`
 
@@ -300,10 +318,10 @@ change your mind after invoking the operator once, you can cancel you selection
 using `<Esc>` key or the `cancel` function (mapped to `sxc` in the example below).
 
 ```lua
-vim.keymap.set("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
-vim.keymap.set("n", "sxx", "<cmd>lua require('substitute.exchange').line()<cr>", { noremap = true })
-vim.keymap.set("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
-vim.keymap.set("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
+vim.keymap.set("n", "sx", require('substitute.exchange').operator, { noremap = true })
+vim.keymap.set("n", "sxx", require('substitute.exchange').line, { noremap = true })
+vim.keymap.set("x", "X", require('substitute.exchange').visual, { noremap = true })
+vim.keymap.set("n", "sxc", require('substitute.exchange').cancel, { noremap = true })
 ```
 
 ### ⚙️ Configuration
@@ -325,7 +343,7 @@ If `true`, you can use the `<Esc>` key to cancel exchange selection. If set to
 false, consider map the cancel function:
 
 ```lua
-vim.keymap.set("n", "sxc", "<cmd>lua require('substitute.exchange').cancel()<cr>", { noremap = true })
+vim.keymap.set("n", "sxc", require('substitute.exchange').cancel, { noremap = true })
 ```
 
 ## 🎨 Colors
