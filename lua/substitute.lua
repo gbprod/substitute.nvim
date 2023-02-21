@@ -19,7 +19,7 @@ function substitute.operator(options)
   substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  vim.api.nvim_feedkeys("g@" .. (options.motion or ""), "i", false)
+  vim.api.nvim_feedkeys("g@" .. (options.motion or ""), "ni", false)
 end
 
 function substitute.operator_callback(vmode)
@@ -71,7 +71,7 @@ function substitute.visual(options)
   substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
-  vim.api.nvim_feedkeys("g@`<", "i", false)
+  vim.api.nvim_feedkeys("g@`<", "ni", false)
 end
 
 return substitute
