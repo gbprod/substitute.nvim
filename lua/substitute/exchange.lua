@@ -68,7 +68,7 @@ end
 function exchange.operator(options)
   options = config.get_exchange(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.exchange'.operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", options.motion or ""), "ni", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", options.motion or ""), "mi", false)
 end
 
 function exchange.visual(options)
