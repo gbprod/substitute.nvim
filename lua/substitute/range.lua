@@ -13,7 +13,7 @@ range.state = {
 function range.operator(options)
   range.state.overrides = config.get_range(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "ni", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "mi", false)
 end
 
 function range.visual(options)
@@ -74,7 +74,7 @@ function range.operator_callback(vmode)
   create_match(c)
 
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "ni", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
 end
 
 local function get_escaped_replacement(c)
@@ -107,7 +107,7 @@ end
 function range.selection_operator_callback()
   range.clear_match()
 
-  vim.api.nvim_feedkeys(range.create_replace_command(), "ni", true)
+  vim.api.nvim_feedkeys(range.create_replace_command(), "mi", true)
 end
 
 return range
