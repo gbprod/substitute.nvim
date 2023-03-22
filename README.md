@@ -66,6 +66,7 @@ Substitute comes with the following defaults:
   on_substitute = nil,
   yank_substituted_text = false,
   preserve_cursor_position = false,
+  modifiers = nil,
   highlight_substituted_text = {
     enabled = true,
     timer = 500,
@@ -113,10 +114,12 @@ Each functions (`operator`, `line`, `eol` and `visual`) are configurable:
 
 ```lua
 lua require('substitute').operator({
-  count = 1,      -- number of substitutions
-  register = "a", -- register used for substitution
-  motion = "iw",  -- only available for `operator`, this will automatically use
-                  -- this operator for substitution instead of asking for.
+  count = 1,       -- number of substitutions
+  register = "a",  -- register used for substitution
+  motion = "iw",   -- only available for `operator`, this will automatically use
+                   -- this operator for substitution instead of asking for.
+  modifiers = nil, -- this allows to modify substitued text, will override the default
+                   -- configuration (see below)
 })
 ```
 
@@ -134,23 +137,82 @@ Default : `false`
 
 If `true`, when performing a substitution, substitued text is pushed into the default register.
 
-### `highlight_substituted_text.enabled`
+#### `highlight_substituted_text.enabled`
 
 Default : `true`
 
 If `true` will temporary highlight substitued text.
 
-### `highlight_substituted_text.timer`
+#### `highlight_substituted_text.timer`
 
 Default : `500`
 
 Define the duration of highlight.
 
-### `preserve_cursor_position`
+#### `preserve_cursor_position`
 
 Default : `false`
 
 If `true`, the cursor position will be preserved when performing a substitution.
+
+#### `modifiers`
+
+Default : `nil`
+
+Could be a function or a table of transformations that will be called to modify substitued text. See modifiers section below.
+
+### ➰ Modifiers
+
+Modifiers are used to modify the text before substitution is performed. You can chain those modifiers or even use a function to dynamicly choose modifier depending on the context.
+
+Available modifiers are:
+
+- `linewise` : will create a new line for substitution ;
+- `reindent` : will reindent substitued text ;
+- `trim` : will trim substitued text ;
+- `join` : will join lines of substitued text.
+
+### Examples
+
+If you want to create a new line for substitution and reindent, you can use:
+
+```lua
+require('substitute').operator({
+  modifiers = { 'linewise', 'reindent' },
+})
+```
+
+If you want to trim and join lines of substitued text, you can use:
+
+```lua
+require('substitute').operator({
+  modifiers = { 'join', 'trim' },
+})
+```
+
+If you want to trim text but only if you substitute text in a charwise motion, you can use:
+
+```lua
+require('substitute').operator({
+  modifiers = function(state)
+    if state.vmode == 'char' then
+      return { 'trim' }
+    end
+  end,
+})
+```
+
+If you always want to reindent text when making a linewise substitution, you can use:
+
+```lua
+require('substitute').operator({
+  modifiers = function(state)
+    if state.vmode == 'line' then
+      return { 'reindent' }
+    end
+  end,
+})
+```
 
 ### 🤝 Integration
 

@@ -7,6 +7,7 @@ function config.setup(options)
     on_substitute = nil,
     yank_substituted_text = false,
     preserve_cursor_position = false,
+    modifiers = nil,
     highlight_substituted_text = {
       enabled = true,
       timer = 500,
@@ -43,6 +44,18 @@ function config.get_exchange(overrides)
   return {
     motion = overrides.motion or config.options.exchange.motion,
   }
+end
+
+function config.get_modifiers(state)
+  if type(state.modifiers) == "function" then
+    return require("substitute.modifiers").build(state.modifiers(state))
+  end
+
+  if type(state.modifiers) == "table" then
+    return require("substitute.modifiers").build(state.modifiers)
+  end
+
+  return config.options.modifiers
 end
 
 return config

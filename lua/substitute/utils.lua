@@ -23,6 +23,7 @@ end
 
 function utils.substitute_text(bufnr, start, finish, regtype, replacement, replacement_regtype)
   regtype = utils.get_register_type(regtype)
+  replacement_regtype = utils.get_register_type(replacement_regtype)
 
   if "l" == regtype then
     vim.api.nvim_buf_set_lines(bufnr, start.row - 1, finish.row, false, replacement)
@@ -97,6 +98,7 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
     vim.api.nvim_buf_set_text(bufnr, start.row - 1, start.col, start.row - 1, start.col, replacement)
   else
     local current_row_len = vim.fn.getline(finish.row):len()
+
     vim.api.nvim_buf_set_text(
       bufnr,
       start.row - 1,
