@@ -29,15 +29,15 @@ function M.setup()
 
   M.load("nvim-lua/plenary.nvim")
 
-  vim.keymap.set("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap = true })
-  vim.keymap.set("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true })
-  vim.keymap.set("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true })
-  vim.keymap.set("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+  vim.keymap.set("n", "ss", require("substitute").line, { noremap = true })
+  vim.keymap.set("n", "S", require("substitute").eol, { noremap = true })
+  vim.keymap.set("n", "s", require("substitute").operator, { noremap = true })
+  vim.keymap.set("x", "s", require("substitute").visual, { noremap = true })
 
-  vim.keymap.set("n", "<leader>s", "<cmd>lua require('substitute.range').operator()<cr>", { noremap = true })
+  vim.keymap.set("n", "<leader>s", require("substitute.range").operator, { noremap = true })
 
-  vim.keymap.set("n", "sx", "<cmd>lua require('substitute.exchange').operator()<cr>", { noremap = true })
-  vim.keymap.set("x", "X", "<cmd>lua require('substitute.exchange').visual()<cr>", { noremap = true })
+  vim.keymap.set("n", "sx", require("substitute.exchange").operator, { noremap = true })
+  vim.keymap.set("x", "X", require("substitute.exchange").visual, { noremap = true })
 end
 
 M.setup()
