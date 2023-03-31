@@ -93,15 +93,19 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
     return marks
   end
 
-  local current_row_len = vim.fn.getline(finish.row):len()
-  vim.api.nvim_buf_set_text(
-    bufnr,
-    start.row - 1,
-    start.col,
-    finish.row - 1,
-    current_row_len > finish.col and finish.col + 1 or current_row_len,
-    replacement
-  )
+  if start.row > finish.row then
+    vim.api.nvim_buf_set_text(bufnr, start.row - 1, start.col, start.row - 1, start.col, replacement)
+  else
+    local current_row_len = vim.fn.getline(finish.row):len()
+    vim.api.nvim_buf_set_text(
+      bufnr,
+      start.row - 1,
+      start.col,
+      finish.row - 1,
+      current_row_len > finish.col and finish.col + 1 or current_row_len,
+      replacement
+    )
+  end
 
   local end_mark_col = string.len(replacement[#replacement])
   if vim.tbl_count(replacement) == 1 then
@@ -113,6 +117,10 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
 end
 
 function utils.text(bufnr, start, finish, vmode)
+  if start.row > finish.row then
+    return { "" }
+  end
+
   local regtype = utils.get_register_type(vmode)
   if "l" == regtype then
     return vim.api.nvim_buf_get_lines(bufnr, start.row - 1, finish.row, false)
