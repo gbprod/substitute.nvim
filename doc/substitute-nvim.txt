@@ -31,7 +31,6 @@ efficient).
 
 ✨ FEATURES               *substitute-nvim-🪓-substitute.nvim-✨-features*
 
-
 - |substitute-nvim-substitute-operator|
 - |substitute-nvim-substitute-over-range-motion|
 - |substitute-nvim-exchange-operator|
@@ -40,7 +39,6 @@ See this plugin in action <DEMO.md>
 
 
 ⚡️ REQUIREMENTS *substitute-nvim-🪓-substitute.nvim-⚡️-requirements*
-
 
 - Neovim >= 0.8.0
 
