@@ -262,6 +262,22 @@ This will use this motion for the first motion of range substitution.
 eg. `lua require('substitute.range').operator({ motion1 = 'iW' })` will select
 inner WORD as subject of substitution.
 
+### `range.subject`
+
+Default : `nil`
+
+This allows you to control the subject (to be replaced) other than using
+motions. It accepts either a function, string, or a table with some special
+keys.
+
+If it is a string that will be used directly. If it is a function it will be
+called when the operator is used, and should return the subject to be replaced.
+If it is a table you may provide one of three keys with appropriate values:
+
+- `register = "a"` Use the contents of this register as the subject.
+- `expand = "<cword>"` Use the string given as the argument to `vim.fn.expand()` to get the subject.
+- `last_search = true` shortcut for `register = "/"` to use the last `/` search.
+
 #### `range.motion2`
 
 Default : `false`
@@ -274,6 +290,17 @@ around paragraph as range of substitution.
 You can combine `motion1` and `motion2` :
 `lua require('substitute.range').operator({ motion1='iw', motion2 = 'ap' })`
 will prepare substitution for inner word around paragraph.
+
+#### `range.range`
+
+Default : `nil`
+
+This allows you to control the range of the substitution other than using
+motions. This takes either a string directly, or a function returning string,
+this string is used as the range of the substitution command.
+
+For example, specifying `range = '%'` will make the substitution run over the
+whole file.
 
 #### `range.register`
 
