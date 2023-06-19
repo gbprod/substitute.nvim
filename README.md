@@ -253,54 +253,58 @@ Default : `false`
 
 This will capture substituted text as you can use `\1` to quickly reuse it.
 
-#### `range.motion1`
-
-Default : `false`
-
-This will use this motion for the first motion of range substitution.
-
-eg. `lua require('substitute.range').operator({ motion1 = 'iW' })` will select
-inner WORD as subject of substitution.
-
 #### `range.subject`
 
 Default : `nil`
 
-This allows you to control the subject (to be replaced) other than using
-motions. It accepts either a function, string, or a table with some special
-keys.
+This allows you to control how the subject (to be replaced) is resolved. It
+accepts either a function, string, or a table with some special keys.
 
 If it is a string that will be used directly. If it is a function it will be
 called when the operator is used, and should return the subject to be replaced.
-If it is a table you may provide one of three keys with appropriate values:
+If it is a table you may provide one of the following keys with appropriate values:
 
 - `register = "a"` Use the contents of this register as the subject.
 - `expand = "<cword>"` Use the string given as the argument to `vim.fn.expand()` to get the subject.
-- `last_search = true` shortcut for `register = "/"` to use the last `/` search.
+- `last_search = true` Shortcut for `register = "/"` to use the last `/` search.
+- `motion = "iw"` Use this motion at the current cursor to get the subject
 
-#### `range.motion2`
-
-Default : `false`
-
-This will use this motion for the second motion of range substitution.
-
-eg. `lua require('substitute.range').operator({ motion2 = 'ap' })` will select
-around paragraph as range of substitution.
-
-You can combine `motion1` and `motion2` :
-`lua require('substitute.range').operator({ motion1='iw', motion2 = 'ap' })`
-will prepare substitution for inner word around paragraph.
+eg. `lua require('substitute.range').operator({ subject = {motion = 'iW'} })`
+will select inner WORD as subject of substitution.
 
 #### `range.range`
 
 Default : `nil`
 
-This allows you to control the range of the substitution other than using
-motions. This takes either a string directly, or a function returning string,
-this string is used as the range of the substitution command.
+This allows you to control the range of the substitution. This takes either a
+function, string, or a table with some special keys. If it is a string that
+will be used directly. If it is a function it will be called after the subject
+is resolved and should return a string. If it is a table you may provide one of
+the following keys with appropriate values:
 
-For example, specifying `range = '%'` will make the substitution run over the
-whole file.
+- `motion = "ap"` Use this motion from the current cursor to get the range.
+
+eg. specifying `range = '%'` will make the substitution run over the
+whole file. See `:h [range]` for all the possible values here.
+
+eg. `lua require('substitute.range').operator({ range = { motion = 'ap' } })`
+will select around paragraph as range of substitution.
+
+You can combine `subject` and `range` :
+`lua require('substitute.range').operator({ subject = { motion='iw' }, range = { motion = 'ap' } })`
+will prepare substitution for inner word around paragraph.
+
+#### `range.motion1` _DEPRECATED_
+
+Default : `false`
+
+This is option deprecated and equivalent to providing `subject.motion`.
+
+#### `range.motion2` _DEPRECATED_
+
+Default : `false`
+
+This option is deprecated and equivalent to `range.motion`
 
 #### `range.register`
 

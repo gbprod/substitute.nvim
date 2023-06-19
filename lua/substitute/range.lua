@@ -10,22 +10,6 @@ range.state = {
   overrides = {},
 }
 
-local function get_text_from(text)
-  if type(text) == "function" then
-    return text()
-  elseif type(text) == "string" then
-    return text
-  elseif type(text) == "table" then
-    if text.register then
-      return vim.fn.getreg(text.register)
-    elseif text.expand then
-      return vim.fn.expand(text.expand)
-    elseif text.last_search then
-      return vim.fn.getreg("/")
-    end
-  end
-end
-
 local function get_escaped_subject(c)
   local escaped_subject = vim.fn.escape(range.state.subject, "/\\.$[]")
   escaped_subject = c.complete_word and string.format("\\<%s\\>", escaped_subject) or escaped_subject
@@ -47,22 +31,42 @@ end
 
 function range.operator(options)
   range.state.overrides = config.get_range(options or {})
-  if not range.state.overrides.motion1 and range.state.overrides.subject then
-    local text = get_text_from(range.state.overrides.subject)
+  local c = range.state.overrides
+
+  if c.motion1 then
+    vim.deprecate("range.motion1", "range.subject.motion", "1.3", "substitute.nvim")
+    c.subject = { motion = c.motion1 }
+  end
+
+  local motion
+  if c.subject then
+    local subject = c.subject
+    local text
+    if type(subject) == "function" then
+      text = subject()
+    elseif type(subject) == "string" then
+      text = subject
+    elseif type(subject) == "table" then
+      if subject.register then
+        text = vim.fn.getreg(subject.register)
+      elseif subject.expand then
+        text = vim.fn.expand(subject.expand)
+      elseif subject.last_search then
+        text = vim.fn.getreg("/")
+      elseif subject.motion then
+        motion = subject.motion
+      end
+    end
     if text then
       range.state.subject = text
       range.operator_callback()
       return
-    else
-      pcall(function()
-        range.state.overrides.motion1 = range.state.overrides.subject.motion
-      end)
     end
   end
 
   range.state.subject = nil
   vim.o.operatorfunc = "v:lua.require'substitute.range'.operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", range.state.overrides.motion1 or ""), "mi", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", motion or ""), "mi", false)
 end
 
 local function get_selection_text(vmode)
@@ -113,7 +117,7 @@ end
 
 function range.word(options)
   options = config.get_range(options or {})
-  options.motion1 = "iw"
+  options.subject.motion = "iw"
   options.complete_word = true
   range.operator(options)
 end
@@ -139,20 +143,34 @@ function range.operator_callback(vmode)
     end
   end
 
-  if not c.motion2 and c.range then
+  if c.motion2 then
+    vim.deprecate("range.motion2", "range.subject.motion", "1.3", "substitute.nvim")
+    c.range = { motion = c.motion2 }
+  end
+
+  local motion
+  if c.range then
+    local have_range = true
     if type(c.range) == "function" then
       range.state.range = c.range()
     elseif type(c.range) == "string" then
       range.state.range = c.range
+    elseif type(c.range) == "table" then
+      if c.range.motion then
+        have_range = false
+        motion = c.range.motion
+      end
     end
-    range.selection_operator_callback()
-    return
+    if have_range then
+      range.selection_operator_callback()
+      return
+    end
   end
 
   create_match(c)
   range.state.range = "'[,']"
   vim.o.operatorfunc = "v:lua.require'substitute.range'.selection_operator_callback"
-  vim.api.nvim_feedkeys(string.format("g@%s", c.motion2 or ""), "mi", false)
+  vim.api.nvim_feedkeys(string.format("g@%s", motion or ""), "mi", false)
 end
 
 local function get_escaped_replacement(c)
