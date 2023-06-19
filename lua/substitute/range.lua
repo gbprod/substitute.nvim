@@ -171,7 +171,6 @@ function range.create_replace_command()
 
   local left = vim.api.nvim_replace_termcodes("<left>", true, false, true)
 
-  vim.print(range)
   local cmd = string.format(
     -- vim.api.nvim_replace_termcodes(":%s%s/%s/%s/g%s%s%s", true, false, true),
     ":%s%s/%s/%s/g%s%s%s",
@@ -183,7 +182,7 @@ function range.create_replace_command()
     c.suffix,
     string.rep(left, 2 + (c.confirm and c.suffix:len() + 1 or c.suffix:len()), "")
   )
-  vim.print(cmd)
+
   return cmd
 end
 

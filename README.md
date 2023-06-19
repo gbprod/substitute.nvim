@@ -262,7 +262,7 @@ This will use this motion for the first motion of range substitution.
 eg. `lua require('substitute.range').operator({ motion1 = 'iW' })` will select
 inner WORD as subject of substitution.
 
-### `range.subject`
+#### `range.subject`
 
 Default : `nil`
 
