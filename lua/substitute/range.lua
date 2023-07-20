@@ -117,7 +117,7 @@ end
 
 function range.word(options)
   options = config.get_range(options or {})
-  options.subject.motion = "iw"
+  options.subject = { expand = "<cword>" }
   options.complete_word = true
   range.operator(options)
 end
