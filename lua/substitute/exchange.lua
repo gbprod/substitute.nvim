@@ -34,6 +34,11 @@ local prepare_exchange = function(vmode)
       return true
     end,
   })
+
+  if config.options.exchange.preserve_cursor_position and nil ~= vim.b.exchange_curpos then
+    vim.api.nvim_win_set_cursor(0, vim.b.exchange_curpos)
+    vim.b.exchange_curpos = nil
+  end
 end
 
 local function do_exchange(vmode)
@@ -63,11 +68,18 @@ local function do_exchange(vmode)
   end
 
   utils.substitute_text(0, origin.marks.start, origin.marks.finish, origin.regtype, target_text, target.regtype)
+  if config.options.exchange.preserve_cursor_position and nil ~= vim.b.exchange_curpos then
+    vim.api.nvim_win_set_cursor(0, vim.b.exchange_curpos)
+    vim.b.exchange_curpos = nil
+  end
 end
 
 function exchange.operator(options)
   options = config.get_exchange(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.exchange'.operator_callback"
+  if config.options.exchange.preserve_cursor_position then
+    vim.b.exchange_curpos = vim.api.nvim_win_get_cursor(0)
+  end
   vim.api.nvim_feedkeys(string.format("g@%s", options.motion or ""), "mi", false)
 end
 
