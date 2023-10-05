@@ -6,6 +6,7 @@ function config.setup(options)
   local default_values = {
     on_substitute = nil,
     yank_substituted_text = false,
+    preserve_cursor_position = false,
     highlight_substituted_text = {
       enabled = true,
       timer = 500,
