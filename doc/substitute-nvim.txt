@@ -343,7 +343,7 @@ the following keys with appropriate values:
 - `motion = "ap"` Use this motion from the current cursor to get the range.
 
 eg. specifying `range = '%'` will make the substitution run over the whole
-file. See `:h [range]` for all the possible values here.
+file. See |[range]| for all the possible values here.
 
 eg. `lua require('substitute.range').operator({ range = { motion = 'ap' } })`
 will select around paragraph as range of substitution.
