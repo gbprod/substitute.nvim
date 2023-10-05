@@ -65,6 +65,7 @@ Substitute comes with the following defaults:
 {
   on_substitute = nil,
   yank_substituted_text = false,
+  preserve_cursor_position = false,
   highlight_substituted_text = {
     enabled = true,
     timer = 500,
@@ -81,6 +82,7 @@ Substitute comes with the following defaults:
   exchange = {
     motion = false,
     use_esc_to_cancel = true,
+    preserve_cursor_position = false,
   },
 }
 ```
@@ -143,6 +145,12 @@ If `true` will temporary highlight substitued text.
 Default : `500`
 
 Define the duration of highlight.
+
+### `preserve_cursor_position`
+
+Default : `false`
+
+If `true`, the cursor position will be preserved when performing a substitution.
 
 ### 🤝 Integration
 
@@ -376,6 +384,12 @@ false, consider map the cancel function:
 ```lua
 vim.keymap.set("n", "sxc", require('substitute.exchange').cancel, { noremap = true })
 ```
+
+### `exchange.preserve_cursor_position`
+
+Default : `false`
+
+If `true`, the cursor position will be preserved when performing an exchange.
 
 ## 🎨 Colors
 

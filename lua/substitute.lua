@@ -5,6 +5,8 @@ local substitute = {}
 
 substitute.state = {
   register = nil,
+  count = nil,
+  curpos = nil,
 }
 
 function substitute.setup(options)
@@ -24,6 +26,9 @@ function substitute.operator(options)
   options = options or {}
   substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
+  if config.options.preserve_cursor_position then
+    substitute.state.curpos = vim.api.nvim_win_get_cursor(0)
+  end
   vim.o.operatorfunc = "v:lua.require'substitute'.operator_callback"
   vim.api.nvim_feedkeys("g@" .. (options.motion or ""), "mi", false)
 end
@@ -48,6 +53,10 @@ function substitute.operator_callback(vmode)
 
   if config.options.yank_substituted_text then
     vim.fn.setreg(utils.get_default_register(), table.concat(substitued_text, "\n"), utils.get_register_type(vmode))
+  end
+
+  if nil ~= substitute.state.curpos and config.options.preserve_cursor_position then
+    vim.api.nvim_win_set_cursor(0, substitute.state.curpos)
   end
 
   if config.options.on_substitute ~= nil then
