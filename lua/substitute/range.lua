@@ -21,12 +21,14 @@ local function create_match(c)
   range.clear_match()
   range.state.match = vim.fn.matchadd("SubstituteRange", get_escaped_subject(c), 2)
 
-  range.state.augroup = vim.api.nvim_create_augroup("SubstituteClearMatch", { clear = true })
-  vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave", "BufLeave", "CursorMoved" }, {
-    group = range.state.augroup,
-    pattern = "*",
-    callback = range.clear_match,
-  })
+  vim.schedule_wrap(function()
+    range.state.augroup = vim.api.nvim_create_augroup("SubstituteClearMatch", { clear = true })
+    vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave", "BufLeave", "CursorMoved" }, {
+      group = range.state.augroup,
+      pattern = "*",
+      callback = range.clear_match,
+    })
+  end)
 end
 
 function range.operator(options)
