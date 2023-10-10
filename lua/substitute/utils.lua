@@ -48,7 +48,7 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
             row - 1,
             start.col,
             row - 1,
-            current_row_len > finish.col and finish.col + 1 or current_row_len,
+            current_row_len > finish.col and utils.get_next_char_bytecol(finish.row, finish.col) or current_row_len,
             { last_replacement }
           )
 
@@ -75,7 +75,7 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
           row - 1,
           current_row_len > start.col and start.col or current_row_len,
           row - 1,
-          current_row_len > finish.col and finish.col + 1 or current_row_len,
+          current_row_len > finish.col and utils.get_next_char_bytecol(finish.row, finish.col) or current_row_len,
           replacement
         )
 
@@ -102,7 +102,7 @@ function utils.substitute_text(bufnr, start, finish, regtype, replacement, repla
       start.row - 1,
       start.col,
       finish.row - 1,
-      current_row_len > finish.col and finish.col + 1 or current_row_len,
+      current_row_len > finish.col and utils.get_next_char_bytecol(finish.row, finish.col) or current_row_len,
       replacement
     )
   end
@@ -131,7 +131,8 @@ function utils.text(bufnr, start, finish, vmode)
     for row = start.row, finish.row, 1 do
       local current_row_len = vim.fn.getline(row):len()
 
-      local end_col = current_row_len > finish.col and finish.col + 1 or current_row_len
+      local end_col = current_row_len > finish.col and utils.get_next_char_bytecol(finish.row, finish.col)
+        or current_row_len
       if start.col > end_col then
         end_col = start.col
       end
@@ -146,7 +147,14 @@ function utils.text(bufnr, start, finish, vmode)
     return text
   end
 
-  return vim.api.nvim_buf_get_text(0, start.row - 1, start.col, finish.row - 1, finish.col + 1, {})
+  return vim.api.nvim_buf_get_text(
+    0,
+    start.row - 1,
+    start.col,
+    finish.row - 1,
+    utils.get_next_char_bytecol(finish.row, finish.col),
+    {}
+  )
 end
 
 function utils.get_default_register()
@@ -236,6 +244,13 @@ function utils.compare_regions(origin, target)
   end
 
   return "="
+end
+
+utils.get_next_char_bytecol = function(linenr, colnr)
+  local line = vim.fn.getline(linenr)
+  local utf_index = vim.str_utfindex(line, math.min(line:len(), colnr + 1))
+
+  return vim.str_byteindex(line, utf_index)
 end
 
 return utils
