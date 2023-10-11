@@ -36,7 +36,7 @@ end
 function substitute.operator_callback(vmode)
   local marks = utils.get_marks(0, vmode)
 
-  print(vim.inspect(marks))
+  -- print(vim.inspect(marks))
 
   local substitued_text = utils.text(0, marks.start, marks.finish, vmode)
 
