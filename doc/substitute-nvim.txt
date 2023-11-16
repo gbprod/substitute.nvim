@@ -457,6 +457,14 @@ eg. `lua require('substitute.range').operator({ register = 'a' })` will use
 `"a` register content as replacement.
 
 
+RANGE.AUTO_APPLY
+
+Default : `false`
+
+Will automatically apply the changes on the buffer. You will not have to
+validate the command line.
+
+
 🤝 INTEGRATION ~
 
 tpope/vim-abolish ~
