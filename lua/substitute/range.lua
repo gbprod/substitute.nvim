@@ -192,16 +192,24 @@ function range.create_replace_command()
   local left = vim.api.nvim_replace_termcodes("<left>", true, false, true)
   local cr = vim.api.nvim_replace_termcodes("<cr>", true, false, true)
 
+  local escaped_replacement = get_escaped_replacement(c)
+
   local cmd = string.format(
     -- vim.api.nvim_replace_termcodes(":%s%s/%s/%s/g%s%s%s", true, false, true),
     ":%s%s/%s/%s/g%s%s%s%s",
     range.state.range,
     c.prefix,
     get_escaped_subject(c),
-    get_escaped_replacement(c),
+    escaped_replacement,
     c.confirm and "c" or "",
     c.suffix,
-    string.rep(left, 2 + (c.confirm and c.suffix:len() + 1 or c.suffix:len()), ""),
+    string.rep(
+      left,
+      2
+        + (c.confirm and c.suffix:len() + 1 or c.suffix:len())
+        + (c.cursor_position == "start" and escaped_replacement:len() or 0),
+      ""
+    ),
     c.auto_apply and cr or ""
   )
 

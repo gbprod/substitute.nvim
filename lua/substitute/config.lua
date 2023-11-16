@@ -22,6 +22,7 @@ function config.setup(options)
       group_substituted_text = false,
       suffix = "",
       auto_apply = false,
+      cursor_position = "end",
     },
     exchange = {
       motion = nil,
