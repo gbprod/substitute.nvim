@@ -391,6 +391,14 @@ Default : `false`
 
 Will automatically apply the changes on the buffer. You will not have to validate the command line.
 
+#### `range.cursor_position`
+
+Default : `end`
+
+This will set the cursor position in the command line at the end or at the beginning of the replacement text. Possible values are `end` and `start`.
+
+eg. With `range.cursor_position = 'start'`, the cursor will be set here: `s/foo/|bar/g` but with `range.cursor_position = 'end'` it will be set to `s/foo/bar|/g`.
+
 ### 🤝 Integration
 
 <details>
