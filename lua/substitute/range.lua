@@ -35,11 +35,6 @@ function range.operator(options)
   range.state.overrides = config.get_range(options or {})
   local c = range.state.overrides
 
-  if c.motion1 then
-    vim.deprecate("range.motion1", "range.subject.motion", "1.3", "substitute.nvim")
-    c.subject = { motion = c.motion1 }
-  end
-
   local motion
   if c.subject then
     local subject = c.subject
@@ -143,11 +138,6 @@ function range.operator_callback(vmode)
     if range.state.subject == nil then
       return
     end
-  end
-
-  if c.motion2 then
-    vim.deprecate("range.motion2", "range.subject.motion", "1.3", "substitute.nvim")
-    c.range = { motion = c.motion2 }
   end
 
   local motion
