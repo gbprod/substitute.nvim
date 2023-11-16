@@ -11,9 +11,9 @@ rewritten in `lua` (and I hope this will be more maintainable, readable and effi
 
 ## ✨ Features
 
-- [Substitute operator](#-substitute-operator)
-- [Substitute over range motion](#-substitute-over-range-motion)
-- [Exchange operator](#-exchange-operator)
+- 🪓 Substitute operator
+- 🔁 Substitute over range motion
+- 🔀 Exchange operator
 
 [See this plugin in action](DEMO.md)
 
@@ -27,34 +27,17 @@ rewritten in `lua` (and I hope this will be more maintainable, readable and effi
 
 Install the plugin with your preferred package manager:
 
-### [packer](https://github.com/wbthomason/packer.nvim)
+### [Lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
--- Lua
-use({
-  "gbprod/substitute.nvim",
-  config = function()
-    require("substitute").setup({
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    })
-  end
-})
-```
-
-### [vim-plug](https://github.com/junegunn/vim-plug)
-
-```viml
-" Vim Script
-Plug 'gbprod/substitute.nvim'
-lua << EOF
-  require("substitute").setup({
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  })
-EOF
+{
+    "gbprod/substitute.nvim",
+    opts = {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+    }
+}
 ```
 
 ## ⚙️ Configuration
@@ -76,9 +59,11 @@ Substitute comes with the following defaults:
     prompt_current_text = false,
     confirm = false,
     complete_word = false,
-    motion1 = false,
-    motion2 = false,
+    subject = nil,
+    range = nil,
     suffix = "",
+    auto_apply = false,
+    cursor_position = "end",
   },
   exchange = {
     motion = false,
@@ -90,9 +75,9 @@ Substitute comes with the following defaults:
 
 More details on these options is available in the sections below corresponding to the different features.
 
-## 🔂 Substitute operator
+## 🪓 Substitute operator
 
-It contains no default mappings and will have no effect until you add your own maps to it.
+This plugin contains no default mappings and will have no effect until you add your own maps to it.
 
 ```lua
 -- Lua
@@ -104,9 +89,7 @@ vim.keymap.set("x", "s", require('substitute').visual, { noremap = true })
 
 Then you can then execute `s<motion>` to substitute the text object provided by the motion with the contents of
 the default register (or an explicit register if provided). For example, you could execute siw to replace the
-current word under the cursor with the current yank, or sip to replace the paragraph, etc.
-
-This action is dot-repeatable.
+current word under the cursor with the current yank, or sip to replace the paragraph, etc. (this action is dot-repeatable)
 
 Note: in this case you will be shadowing the change character key `s` so you will have to use the longer form `cl`.
 
@@ -117,7 +100,7 @@ lua require('substitute').operator({
   count = 1,       -- number of substitutions
   register = "a",  -- register used for substitution
   motion = "iw",   -- only available for `operator`, this will automatically use
-                   -- this operator for substitution instead of asking for.
+                   -- this motion for substitution instead of waiting for.
   modifiers = nil, -- this allows to modify substitued text, will override the default
                    -- configuration (see below)
 })
@@ -364,18 +347,6 @@ You can combine `subject` and `range` :
 `lua require('substitute.range').operator({ subject = { motion='iw' }, range = { motion = 'ap' } })`
 will prepare substitution for inner word around paragraph.
 
-#### `range.motion1` _DEPRECATED_
-
-Default : `false`
-
-This is option deprecated and equivalent to providing `subject.motion`.
-
-#### `range.motion2` _DEPRECATED_
-
-Default : `false`
-
-This option is deprecated and equivalent to `range.motion`
-
 #### `range.register`
 
 Default : `nil`
@@ -478,5 +449,3 @@ If `true`, the cursor position will be preserved when performing an exchange.
 
 This plugin is a lua version of [svermeulen/vim-subversive](https://github.com/svermeulen/vim-subversive) and
 [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) awesome plugins.
-
-Thanks to [m00qek lua plugin template](https://github.com/m00qek/plugin-template.nvim).
