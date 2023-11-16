@@ -385,6 +385,12 @@ This will use the content of this register as replacement value.
 eg. `lua require('substitute.range').operator({ register = 'a' })` will use `"a`
 register content as replacement.
 
+#### `range.auto_apply`
+
+Default : `false`
+
+Will automatically apply the changes on the buffer. You will not have to validate the command line.
+
 ### 🤝 Integration
 
 <details>
