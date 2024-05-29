@@ -15,7 +15,7 @@ local prepare_exchange = function(vmode)
     "SubstituteExchange",
     { marks.start.row - 1, regtype ~= "l" and marks.start.col or 0 },
     { marks.finish.row - 1, regtype ~= "l" and marks.finish.col + 1 or -1 },
-    { regtype = vmode, inclusive = false }
+    { regtype = ({ char = "v", line = "V" })[vmode], inclusive = false }
   )
 
   vim.b.exchange_origin = {
