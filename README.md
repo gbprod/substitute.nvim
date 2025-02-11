@@ -42,10 +42,16 @@ Install the plugin with your preferred package manager:
 
 ## ⚙️ Configuration
 
+For the basic setup with default configurations:
+
+```lua
+require('substitute').setup()
+```
+
 Substitute comes with the following defaults:
 
 ```lua
-{
+require('substitute').setup({
   on_substitute = nil,
   yank_substituted_text = false,
   preserve_cursor_position = false,
@@ -70,7 +76,7 @@ Substitute comes with the following defaults:
     use_esc_to_cancel = true,
     preserve_cursor_position = false,
   },
-}
+})
 ```
 
 More details on these options is available in the sections below corresponding to the different features.
