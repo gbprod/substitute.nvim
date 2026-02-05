@@ -32,6 +32,9 @@ local function create_match(c)
 end
 
 function range.operator(options)
+  if not config.check_setup() then
+    return
+  end
   range.state.overrides = config.get_range(options or {})
   local c = range.state.overrides
 
@@ -83,6 +86,9 @@ local function get_selection_range(vmode)
 end
 
 function range.visual(options)
+  if not config.check_setup() then
+    return
+  end
   vim.cmd([[execute "normal! \<esc>"]])
   range.state.overrides = config.get_range(options or {})
   local vmode = vim.fn.visualmode()

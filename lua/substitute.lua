@@ -23,6 +23,9 @@ function substitute.setup(options)
 end
 
 function substitute.operator(options)
+  if not config.check_setup() then
+    return
+  end
   options = options or {}
   substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)
@@ -100,6 +103,9 @@ function substitute.eol(options)
 end
 
 function substitute.visual(options)
+  if not config.check_setup() then
+    return
+  end
   options = options or {}
   substitute.state.register = options.register or vim.v.register
   substitute.state.count = options.count or (vim.v.count > 0 and vim.v.count or 1)

@@ -1,8 +1,10 @@
 local config = {}
 
 config.options = {}
+config.did_setup = false
 
 function config.setup(options)
+  config.did_setup = true
   local default_values = {
     on_substitute = nil,
     yank_substituted_text = false,
@@ -58,6 +60,17 @@ function config.get_modifiers(state)
   end
 
   return config.options.modifiers
+end
+
+function config.check_setup()
+  if not config.did_setup then
+    vim.notify(
+      "[substitute.nvim] setup() must be called before using substitute.nvim. See :h substitute.nvim-configuration",
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+  return true
 end
 
 return config

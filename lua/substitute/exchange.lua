@@ -75,6 +75,9 @@ local function do_exchange(vmode)
 end
 
 function exchange.operator(options)
+  if not config.check_setup() then
+    return
+  end
   options = config.get_exchange(options or {})
   vim.o.operatorfunc = "v:lua.require'substitute.exchange'.operator_callback"
   if config.options.exchange.preserve_cursor_position then
