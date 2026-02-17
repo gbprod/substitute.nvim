@@ -120,7 +120,7 @@ function substitute.highlight_substituted_text(marks)
   vim.api.nvim_buf_clear_namespace(0, substitute.hl_substitute, 0, -1)
 
   for _, mark in pairs(marks) do
-    vim.highlight.range(
+    vim.hl.range(
       0,
       substitute.hl_substitute,
       "SubstituteSubstituted",

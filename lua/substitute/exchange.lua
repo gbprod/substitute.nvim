@@ -9,7 +9,7 @@ local prepare_exchange = function(vmode)
   local marks = utils.get_marks(0, vmode)
   local regtype = utils.get_register_type(vmode)
 
-  vim.highlight.range(
+  vim.hl.range(
     0,
     hl_namespace,
     "SubstituteExchange",
